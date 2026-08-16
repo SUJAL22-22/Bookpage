@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LUMORA BOOKS - Stories That Stay With You. Discover curated books, author stories, and thoughtful recommendations.">
+    <meta property="og:title" content="LUMORA BOOKS — Stories That Stay With You">
+    <meta property="og:description" content="Discover stories, ideas and unforgettable characters curated for curious minds.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://lumorabooks.com">
+    <title>LUMORA BOOKS — Stories That Stay With You</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="#discover" class="nav-logo" aria-label="LUMORA Home">LUMORA</a>
+            
+            <ul class="nav-menu">
+                <li><a href="#discover" class="nav-link">Discover</a></li>
+                <li><a href="#books" class="nav-link">Books</a></li>
+                <li><a href="#categories" class="nav-link">Categories</a></li>
+                <li><a href="#book-week" class="nav-link">Book of the Week</a></li>
+                <li><a href="#authors" class="nav-link">Authors</a></li>
+                <li><a href="#reading-experience" class="nav-link">Reading Experience</a></li>
+                <li><a href="#journal" class="nav-link">Journal</a></li>
+                <li><a href="#newsletter" class="nav-link">Newsletter</a></li>
+                <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="nav-icon-btn" aria-label="Search" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="nav-icon-btn" aria-label="Wishlist" id="wishlistBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <span class="nav-badge" id="wishlistBadge">0</span>
+                </button>
+                <button class="nav-icon-btn" aria-label="Cart" id="cartBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="nav-badge" id="cartBadge">0</span>
+                </button>
+                <button class="nav-menu-toggle" aria-label="Menu" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-list">
+            <li><a href="#discover" class="mobile-menu-link">Discover</a></li>
+            <li><a href="#books" class="mobile-menu-link">Books</a></li>
+            <li><a href="#categories" class="mobile-menu-link">Categories</a></li>
+            <li><a href="#book-week" class="mobile-menu-link">Book of the Week</a></li>
+            <li><a href="#authors" class="mobile-menu-link">Authors</a></li>
+            <li><a href="#reading-experience" class="mobile-menu-link">Reading Experience</a></li>
+            <li><a href="#journal" class="mobile-menu-link">Journal</a></li>
+            <li><a href="#newsletter" class="mobile-menu-link">Newsletter</a></li>
+            <li><a href="#testimonials" class="mobile-menu-link">Testimonials</a></li>
+        </ul>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search books, authors, categories..." aria-label="Search">
+            <button class="search-close" aria-label="Close search" id="searchClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="discover">
+        <div class="hero-container">
+            <div class="hero-content">
+                <p class="hero-subtitle animate-fade-in-down stagger-1">WELCOME TO LUMORA</p>
+                <h1 class="hero-title animate-fade-in-up stagger-2">
+                    Every Book<br>
+                    Opens Another<br>
+                    World.
+                </h1>
+                <p class="hero-description animate-fade-in-up stagger-3">Discover stories, ideas and unforgettable characters curated for curious minds.</p>
+                <div class="hero-cta animate-fade-in-up stagger-4">
+                    <a href="#books" class="btn btn-primary hover-lift">EXPLORE BOOKS</a>
+                    <a href="#authors" class="btn btn-secondary hover-lift">DISCOVER AUTHORS</a>
+                </div>
+            </div>
+            <div class="hero-books">
+                <div class="hero-book hero-book-1 animate-fade-in-right stagger-2 hover-lift">
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop" alt="Book cover" loading="lazy">
+                </div>
+                <div class="hero-book hero-book-2 animate-fade-in-up stagger-3 hover-lift">
+                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop" alt="Book cover" loading="lazy">
+                </div>
+                <div class="hero-book hero-book-3 animate-fade-in-left stagger-4 hover-lift">
+                    <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop" alt="Book cover" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Books Section -->
+    <section class="section trending" id="books">
+        <div class="container">
+            <h2 class="section-title">WHAT READERS ARE LOVING</h2>
+            <div class="books-grid" id="booksGrid">
+                <div class="loading-state">Discovering your next story...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Discovery -->
+    <section class="section categories-section" id="categories">
+        <div class="container">
+            <h2 class="section-title">FIND YOUR NEXT STORY</h2>
+            <div class="categories-list" id="categoriesList">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="Fiction">Fiction</button>
+                <button class="category-btn" data-category="Mystery">Mystery</button>
+                <button class="category-btn" data-category="Romance">Romance</button>
+                <button class="category-btn" data-category="Science Fiction">Science Fiction</button>
+                <button class="category-btn" data-category="Biography">Biography</button>
+                <button class="category-btn" data-category="Self Development">Self Development</button>
+                <button class="category-btn" data-category="History">History</button>
+                <button class="category-btn" data-category="Business">Business</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Book of the Week -->
+    <section class="section book-week" id="book-week">
+        <div class="container">
+            <h2 class="section-title">BOOK OF THE WEEK</h2>
+            <div class="book-week-content">
+                <div class="book-week-cover">
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&h=750&fit=crop" alt="The Silent Garden book cover" loading="lazy">
+                </div>
+                <div class="book-week-info">
+                    <h3 class="book-week-title">THE SILENT GARDEN</h3>
+                    <p class="book-week-description">A beautifully written story about memory, identity and the places we carry within us.</p>
+                    <div class="book-week-details">
+                        <p><strong>Author:</strong> Elena Hart</p>
+                        <p><strong>Rating:</strong> 4.8/5</p>
+                        <p><strong>Pages:</strong> 324</p>
+                        <p><strong>Published:</strong> 2024</p>
+                        <p class="book-week-price">₹599</p>
+                    </div>
+                    <div class="book-week-cta">
+                        <button class="btn btn-primary book-week-read" data-book-id="featured">READ MORE</button>
+                        <button class="btn btn-secondary book-week-add" data-book-id="featured">ADD TO CART</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Author Spotlight -->
+    <section class="section author-spotlight" id="authors">
+        <div class="container">
+            <h2 class="section-title">MEET THE AUTHOR</h2>
+            <div class="author-content">
+                <div class="author-image">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&h=500&fit=crop" alt="Elena Hart portrait" loading="lazy">
+                </div>
+                <div class="author-info">
+                    <h3 class="author-name">ELENA HART</h3>
+                    <p class="author-quote">"Stories are not written to be finished. They are written to be remembered."</p>
+                    <p class="author-bio">Elena Hart is an award-winning author known for her evocative storytelling and deep exploration of human emotions. Her works have been translated into over 20 languages.</p>
+                    <div class="author-stats">
+                        <p><strong>Books:</strong> 12</p>
+                        <p><strong>Best Seller:</strong> The Silent Garden</p>
+                    </div>
+                    <button class="btn btn-primary">FOLLOW AUTHOR</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reading Experience -->
+    <section class="section reading-experience" id="reading-experience">
+        <div class="reading-experience-bg">
+            <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=1920&h=1080&fit=crop" alt="Person reading" loading="lazy">
+        </div>
+        <div class="reading-experience-content">
+            <h2 class="reading-experience-title">YOUR NEXT CHAPTER STARTS HERE</h2>
+            <blockquote class="reading-quote">
+                "A room without books is like a body without a soul."
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- Reading Journal -->
+    <section class="section journal" id="journal">
+        <div class="container">
+            <h2 class="section-title">FROM THE LUMORA JOURNAL</h2>
+            <div class="journal-grid">
+                <article class="journal-card animate-fade-in-up stagger-1 hover-lift">
+                    <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop" alt="Physical books" loading="lazy">
+                    <span class="journal-category">Culture</span>
+                    <h3 class="journal-title">Why We Still Read Physical Books</h3>
+                    <p class="journal-date">August 15, 2026</p>
+                    <a href="#" class="journal-link">Read Article</a>
+                </article>
+                <article class="journal-card animate-fade-in-up stagger-2 hover-lift">
+                    <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=600&h=400&fit=crop" alt="Storytelling" loading="lazy">
+                    <span class="journal-category">Psychology</span>
+                    <h3 class="journal-title">The Psychology Behind Great Stories</h3>
+                    <p class="journal-date">August 12, 2026</p>
+                    <a href="#" class="journal-link">Read Article</a>
+                </article>
+                <article class="journal-card animate-fade-in-up stagger-3 hover-lift">
+                    <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&h=400&fit=crop" alt="Book collection" loading="lazy">
+                    <span class="journal-category">Recommendations</span>
+                    <h3 class="journal-title">7 Books That Will Change Your Perspective</h3>
+                    <p class="journal-date">August 10, 2026</p>
+                    <a href="#" class="journal-link">Read Article</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="section newsletter" id="newsletter">
+        <div class="container">
+            <h2 class="newsletter-title">A LITTLE SOMETHING FOR YOUR READING LIST</h2>
+            <p class="newsletter-description">Join the Lumora Journal for new releases, author stories and thoughtful recommendations.</p>
+            <form class="newsletter-form" id="newsletterForm">
+                <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Email address">
+                <button type="submit" class="btn btn-primary">JOIN LUMORA</button>
+            </form>
+            <p class="newsletter-message" id="newsletterMessage"></p>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials" id="testimonials">
+        <div class="container">
+            <h2 class="section-title animate-fade-in-down">WHAT OUR READERS SAY</h2>
+            <div class="testimonial-slider animate-fade-in-up">
+                <div class="testimonial-track" id="testimonialTrack">
+                    <div class="testimonial-item active">
+                        <blockquote class="testimonial-quote">"Lumora makes discovering books feel like discovering a new world."</blockquote>
+                        <cite class="testimonial-author">— Maya R.</cite>
+                    </div>
+                    <div class="testimonial-item">
+                        <blockquote class="testimonial-quote">"The curation is impeccable. Every book I've ordered has been a treasure."</blockquote>
+                        <cite class="testimonial-author">— James K.</cite>
+                    </div>
+                    <div class="testimonial-item">
+                        <blockquote class="testimonial-quote">"Finally, a bookstore that understands the art of reading."</blockquote>
+                        <cite class="testimonial-author">— Sarah L.</cite>
+                    </div>
+                    <div class="testimonial-item">
+                        <blockquote class="testimonial-quote">"The journal section keeps me coming back for more than just books."</blockquote>
+                        <cite class="testimonial-author">— Michael T.</cite>
+                    </div>
+                </div>
+                <div class="testimonial-controls">
+                    <button class="testimonial-prev" aria-label="Previous testimonial" id="testimonialPrev">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m15 18-6-6 6-6"></path>
+                        </svg>
+                    </button>
+                    <div class="testimonial-dots" id="testimonialDots"></div>
+                    <button class="testimonial-next" aria-label="Next testimonial" id="testimonialNext">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m9 18 6-6-6-6"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">LUMORA</h3>
+                    <p class="footer-tagline">Stories That Stay With You.</p>
+                    <p class="footer-description">Discover curated books, author stories, and thoughtful recommendations for curious minds.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Pinterest">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0z"></path>
+                                <path d="M12 2v2"></path>
+                                <path d="M12 20v2"></path>
+                                <path d="m4.93 4.93 1.41 1.41"></path>
+                                <path d="m17.66 17.66 1.41 1.41"></path>
+                                <path d="M2 12h2"></path>
+                                <path d="M20 12h2"></path>
+                                <path d="m6.34 17.66-1.41 1.41"></path>
+                                <path d="m19.07 4.93-1.41 1.41"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-newsletter">
+                    <h4 class="footer-heading">Stay Updated</h4>
+                    <p class="footer-newsletter-text">Join our newsletter for new releases and exclusive offers.</p>
+                    <form class="footer-newsletter-form">
+                        <input type="email" placeholder="Enter your email" class="footer-newsletter-input">
+                        <button type="submit" class="btn btn-primary footer-newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4 class="footer-heading">Explore</h4>
+                    <ul class="footer-links">
+                        <li><a href="#books">Books</a></li>
+                        <li><a href="#categories">Categories</a></li>
+                        <li><a href="#authors">Authors</a></li>
+                        <li><a href="#book-week">Book of the Week</a></li>
+                        <li><a href="#">New Releases</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">About</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#journal">Journal</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Help</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:hello@lumorabooks.com">hello@lumorabooks.com</a></li>
+                        <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                        <li><a href="#">123 Book Street</a></li>
+                        <li><a href="#">New York, NY 10001</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>© 2026 LUMORA BOOKS. ALL RIGHTS RESERVED.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"></path>
+        </svg>
+    </button>
+
+    <!-- Cart Drawer -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-overlay" id="cartOverlay"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <h3>Your Cart</h3>
+                <button class="cart-drawer-close" aria-label="Close cart" id="cartClose">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="cart-drawer-body" id="cartItems">
+                <p class="cart-empty">Your cart is empty</p>
+            </div>
+            <div class="cart-drawer-footer">
+                <div class="cart-totals">
+                    <p>Subtotal: <span id="cartSubtotal">₹0</span></p>
+                    <p class="cart-total">Total: <span id="cartTotal">₹0</span></p>
+                </div>
+                <button class="btn btn-primary cart-checkout">CHECKOUT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Modal -->
+    <div class="modal" id="bookModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal" id="modalClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            </button>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>
