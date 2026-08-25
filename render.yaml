@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: lumora-books
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        value: mongodb+srv://sujalchauhan457_db_user:S9TXftiQUBZgpeGY@cluster0.ythvvgv.mongodb.net/lumora-books?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: lumora_secret_key_123

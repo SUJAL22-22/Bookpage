@@ -67,10 +67,11 @@ app.get('/:page', (req, res) => {
   });
 });
 
-// Start server (only in non-serverless environments)
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+// Connect to DB immediately on server startup (Render / Local)
+if (!process.env.VERCEL) {
+  connectDB().catch(err => console.error('Initial DB connection failed:', err));
   app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 }
 

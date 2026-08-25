@@ -28,23 +28,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   applyFilters();
 });
 
+const CATALOG_FALLBACK_BOOKS = [
+  { _id: 'static1', title: 'Love in the Mist', author: 'Sophie Dubois', description: 'Set in Paris in the 1920s, a painter and a writer cross paths, igniting a passionate love affair.', price: 499, originalPrice: 699, category: 'Romance', genre: 'Historical Romance', coverImage: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&h=750&fit=crop', rating: 4.3, reviewsCount: 71, pages: 290, language: 'English', publisher: 'Rive Gauche Books', publicationDate: 'February 14, 2024', publicationYear: 2024, stock: 22, featured: false },
+  { _id: 'static2', title: 'Atomic Habits & Mindsets', author: 'Charles Duhigg', description: 'A synthesised blueprint showing how micro-behaviors and habit cues combine to drive personal productivity.', price: 599, originalPrice: 799, category: 'Self Development', genre: 'Habits', coverImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&h=750&fit=crop', rating: 4.8, reviewsCount: 450, pages: 260, language: 'English', publisher: 'Catalyst Press', publicationDate: 'July 1, 2024', publicationYear: 2024, stock: 30, featured: true },
+  { _id: 'static3', title: "The Silent Patient's Secret", author: 'Alex Michaelides Jr.', description: 'When a therapist takes on a mute patient accused of murdering her husband, he uncovers a deep psychological puzzle.', price: 699, originalPrice: 999, category: 'Mystery', genre: 'Psychological Mystery', coverImage: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=500&h=750&fit=crop', rating: 4.7, reviewsCount: 189, pages: 360, language: 'English', publisher: 'Hesperus Thrillers', publicationDate: 'April 8, 2024', publicationYear: 2024, stock: 15, featured: true },
+  { _id: 'static4', title: 'Code and Cosmos', author: 'Alan Turing Jr.', description: 'An accessible exploration of quantum computing, artificial intelligence, and cosmological computing.', price: 899, originalPrice: 1199, category: 'Technology', genre: 'Popular Science', coverImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=750&fit=crop', rating: 4.6, reviewsCount: 47, pages: 310, language: 'English', publisher: 'Silicon Press', publicationDate: 'March 22, 2024', publicationYear: 2024, stock: 14, featured: false },
+  { _id: 'static5', title: 'Architects of the Web', author: 'Lisa Sterling', description: 'Discover the untold story of the pioneers who designed the internet and browser protocols.', price: 799, originalPrice: 999, category: 'Technology', genre: 'Tech History', coverImage: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&h=750&fit=crop', rating: 4.8, reviewsCount: 118, pages: 365, language: 'English', publisher: 'Web Builders Syndicate', publicationDate: 'August 3, 2023', publicationYear: 2023, stock: 8, featured: false },
+  { _id: 'static6', title: 'Leonardo da Vinci: A Life', author: 'Walter Isaacson III', description: 'Based on thousands of pages from his notebooks, this stunning biography connects art, science, and curiosity.', price: 999, originalPrice: 1499, category: 'Biography', genre: 'Historical Biography', coverImage: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=500&h=750&fit=crop', rating: 4.9, reviewsCount: 284, pages: 600, language: 'English', publisher: 'Genius Press', publicationDate: 'October 11, 2023', publicationYear: 2023, stock: 5, featured: true },
+  { _id: 'static7', title: 'The Roman Way', author: 'Dr. Arthur Miller', description: 'An immersive examination of daily life, philosophy, and strategy during the Roman Empire.', price: 799, originalPrice: 1099, category: 'History', genre: 'Classical History', coverImage: 'https://images.unsplash.com/photo-1447069387593-a5de0862481e?w=500&h=750&fit=crop', rating: 4.6, reviewsCount: 130, pages: 380, language: 'English', publisher: 'Romanesque Publications', publicationDate: 'June 5, 2023', publicationYear: 2023, stock: 13, featured: false },
+  { _id: 'static8', title: 'Rethinking Capitalism', author: 'Prof. David Harvey', description: 'A provocative critical review of contemporary financial systems and modern economics.', price: 849, originalPrice: 1149, category: 'Business', genre: 'Economics', coverImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&h=750&fit=crop', rating: 4.4, reviewsCount: 92, pages: 440, language: 'English', publisher: 'Meridian Books', publicationDate: 'January 17, 2024', publicationYear: 2024, stock: 9, featured: false },
+  { _id: 'static9', title: 'The Midnight Library', author: 'Nora Seed', description: 'Between life and death there is a library, and within that library, the shelves go on forever.', price: 549, originalPrice: 799, category: 'Fiction', genre: 'Literary Fiction', coverImage: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=500&h=750&fit=crop', rating: 4.5, reviewsCount: 312, pages: 304, language: 'English', publisher: 'Canongate Books', publicationDate: 'September 29, 2020', publicationYear: 2020, stock: 20, featured: true },
+  { _id: 'static10', title: 'Wings of Fire', author: 'A.P.J. Abdul Kalam', description: 'An autobiography of one of the greatest scientists and the 11th President of India.', price: 299, originalPrice: 449, category: 'Biography', genre: 'Autobiography', coverImage: 'https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=500&h=750&fit=crop', rating: 4.8, reviewsCount: 520, pages: 196, language: 'English', publisher: 'Universities Press', publicationDate: 'October 1, 1999', publicationYear: 1999, stock: 35, featured: false },
+  { _id: 'static11', title: 'The Psychology of Money', author: 'Morgan Housel', description: 'Timeless lessons on wealth, greed, and happiness.', price: 449, originalPrice: 599, category: 'Business', genre: 'Personal Finance', coverImage: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=500&h=750&fit=crop', rating: 4.7, reviewsCount: 678, pages: 256, language: 'English', publisher: 'Harriman House', publicationDate: 'September 8, 2020', publicationYear: 2020, stock: 25, featured: true },
+  { _id: 'static12', title: 'Dune', author: 'Frank Herbert', description: 'Set in the distant future amidst a feudal interstellar society on desert planet Arrakis.', price: 649, originalPrice: 899, category: 'Fantasy', genre: 'Science Fantasy', coverImage: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=750&fit=crop', rating: 4.9, reviewsCount: 890, pages: 412, language: 'English', publisher: 'Chilton Books', publicationDate: 'August 1, 1965', publicationYear: 1965, stock: 18, featured: true },
+  { _id: 'static13', title: 'Rich Dad Poor Dad', author: 'Robert T. Kiyosaki', description: 'What the rich teach their kids about money that the poor and middle class do not.', price: 399, originalPrice: 549, category: 'Business', genre: 'Personal Finance', coverImage: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&h=750&fit=crop', rating: 4.6, reviewsCount: 1200, pages: 336, language: 'English', publisher: 'Warner Books', publicationDate: 'April 1, 2000', publicationYear: 2000, stock: 40, featured: false },
+  { _id: 'static14', title: 'The Alchemist', author: 'Paulo Coelho', description: "A philosophical novel following a young Andalusian shepherd's journey to Egypt.", price: 349, originalPrice: 499, category: 'Fiction', genre: 'Philosophical Fiction', coverImage: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=500&h=750&fit=crop', rating: 4.7, reviewsCount: 1500, pages: 208, language: 'English', publisher: 'HarperCollins', publicationDate: 'April 25, 1988', publicationYear: 1988, stock: 30, featured: true },
+  { _id: 'static15', title: 'Sapiens', author: 'Yuval Noah Harari', description: 'A brief history of humankind, from the Stone Age to the 21st century.', price: 699, originalPrice: 999, category: 'History', genre: 'Anthropology', coverImage: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=500&h=750&fit=crop', rating: 4.8, reviewsCount: 890, pages: 512, language: 'English', publisher: 'Harvill Secker', publicationDate: 'September 4, 2011', publicationYear: 2011, stock: 22, featured: false },
+];
+
 // Fetch all books
 async function fetchCatalogBooks() {
   try {
     const response = await fetch('/api/books');
     if (!response.ok) throw new Error('Failed to fetch catalog books');
     allBooks = await response.json();
+    if (!allBooks || allBooks.length === 0) throw new Error('Empty catalog response');
     filteredBooks = [...allBooks];
   } catch (error) {
-    console.error('Error fetching catalog:', error);
-    if (catalogGrid) {
-      catalogGrid.innerHTML = `
-        <div class="no-results-state">
-          <h3>Failed to load books</h3>
-          <p>Please check your connection and try again.</p>
-        </div>
-      `;
-    }
+    console.warn('Using fallback catalog data:', error);
+    allBooks = [...CATALOG_FALLBACK_BOOKS];
+    filteredBooks = [...allBooks];
   }
 }
 
