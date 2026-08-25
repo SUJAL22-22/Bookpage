@@ -52,8 +52,21 @@ const receiptTotal = document.getElementById('receiptTotal');
 // Initialize Checkout
 document.addEventListener('DOMContentLoaded', () => {
   if (cart.length === 0) {
-    alert('Your cart is empty! Redirecting to shop.');
-    window.location.href = '/';
+    // Show empty cart state inside checkout grid instead of abrupt alert
+    if (checkoutGrid) {
+      checkoutGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; background: var(--white); border-radius: 8px; border: 1px solid var(--paper-dark);">
+          <svg viewBox="0 0 24 24" width="60" height="60" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 20px; color: var(--muted);">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 10px; color: var(--ink);">Your Bag is Empty</h2>
+          <p style="color: var(--muted); margin-bottom: 2rem;">Please add books to your shopping cart before proceeding to checkout.</p>
+          <a href="/books.html" class="btn btn-primary">EXPLORE BOOKS</a>
+        </div>
+      `;
+    }
     return;
   }
 
@@ -61,7 +74,30 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSummary();
   initFormFlow();
   initInputFormatters();
+  autoFillUserDetails();
 });
+
+// Auto-fill logged in user details
+function autoFillUserDetails() {
+  const token = localStorage.getItem('lumoraToken');
+  if (token) {
+    fetch('/api/auth/profile', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(user => {
+      if (user) {
+        if (user.name && fullNameInput && !fullNameInput.value) {
+          fullNameInput.value = user.name;
+        }
+        if (user.email && emailInput && !emailInput.value) {
+          emailInput.value = user.email;
+        }
+      }
+    })
+    .catch(() => {});
+  }
+}
 
 // Calculations
 function calculateTotals() {
