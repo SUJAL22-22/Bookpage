@@ -4,6 +4,21 @@
 
 // State Management
 let cart = JSON.parse(localStorage.getItem('lumoraCart')) || [];
+
+// Auto-seed default book if cart is empty so Order Summary is always full & ready
+if (!cart || cart.length === 0) {
+  cart = [{
+    _id: 'static2',
+    title: 'Atomic Habits',
+    author: 'James Clear',
+    price: 599,
+    originalPrice: 799,
+    coverImage: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80',
+    quantity: 1
+  }];
+  localStorage.setItem('lumoraCart', JSON.stringify(cart));
+}
+
 let subtotal = 0;
 let shippingFee = 0;
 let total = 0;
@@ -94,21 +109,51 @@ function calculateTotals() {
   }
 }
 
+// Interactive quantity modifier directly in Order Summary
+window.updateSummaryQty = function(index, delta) {
+  if (!cart[index]) return;
+  cart[index].quantity = (cart[index].quantity || 1) + delta;
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
+  }
+  localStorage.setItem('lumoraCart', JSON.stringify(cart));
+  calculateTotals();
+  renderSummary();
+  if (typeof updateCartBadge === 'function') {
+    updateCartBadge();
+  }
+};
+
 // Render Summary panel
 function renderSummary() {
   if (!summaryItems) return;
 
   if (cart && Array.isArray(cart) && cart.length > 0) {
-    summaryItems.innerHTML = cart.map(item => `
+    summaryItems.innerHTML = cart.map((item, idx) => `
       <div class="summary-item">
         <img src="${item.coverImage || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=100'}" alt="${item.title || 'Book'}" class="summary-item-img">
         <div class="summary-item-details">
           <h4 class="summary-item-title">${item.title || 'Book Title'}</h4>
-          <p class="summary-item-meta">Qty: ${item.quantity || 1}</p>
+          <div class="summary-item-meta">
+            <span>Qty:</span>
+            <div class="summary-qty-controls">
+              <button type="button" class="summary-qty-btn" onclick="updateSummaryQty(${idx}, -1)" title="Decrease">−</button>
+              <span>${item.quantity || 1}</span>
+              <button type="button" class="summary-qty-btn" onclick="updateSummaryQty(${idx}, 1)" title="Increase">+</button>
+            </div>
+          </div>
         </div>
         <div class="summary-item-price">₹${(item.price || 0) * (item.quantity || 1)}</div>
       </div>
-    `).join('');
+    `).join('') + `
+      <a href="/books.html" class="summary-add-more">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add More Books
+      </a>
+    `;
   } else {
     summaryItems.innerHTML = `
       <div style="padding: 1.5rem 0; text-align: center; color: var(--muted); font-size: 0.9rem;">
