@@ -2628,10 +2628,6 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 2rem;
   }
   
-  .books-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-  
   .journal-grid {
     grid-template-columns: 1fr;
   }
@@ -2684,10 +2680,6 @@ h1, h2, h3, h4, h5, h6 {
   .section-title {
     font-size: 1.75rem;
     margin-bottom: 2rem;
-  }
-  
-  .books-grid {
-    grid-template-columns: 1fr;
   }
   
   .categories-list {

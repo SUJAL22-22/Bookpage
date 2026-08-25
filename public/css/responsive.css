@@ -1,43 +1,87 @@
 /* ============================================
-   LUMORA BOOKS - RESPONSIVE LAYOUT SYSTEM
+   LUMORA BOOKS - COMPLETE RESPONSIVE DESIGN SYSTEM
    ============================================ */
 
-/* Large Screens & Desktop (Default container is 1400px max) */
+/* --------------------------------------------
+   1. GLOBAL & CONTAINER ADJUSTMENTS
+   -------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* --------------------------------------------
+   2. DESKTOP & LARGE SCREENS (1200px - 1400px)
+   -------------------------------------------- */
 @media (max-width: 1200px) {
   html {
     font-size: 15px;
   }
-  .hero-title {
-    font-size: 3.5rem;
+
+  .container {
+    padding: 0 1.5rem;
   }
+
+  .hero-title {
+    font-size: 3.2rem;
+  }
+
   .books-grid {
     gap: 1.5rem;
   }
+
+  .books-grid-catalog {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .checkout-grid {
+    grid-template-columns: 1fr 360px;
+    gap: 2rem;
+  }
 }
 
-/* Tablets (Portrait and Landscape) */
-@media (max-width: 992px) {
+/* --------------------------------------------
+   3. TABLETS (769px - 1024px)
+   -------------------------------------------- */
+@media (max-width: 1024px) {
   html {
-    font-size: 14px;
-  }
-  
-  .section {
-    padding: 4rem 0;
+    font-size: 14.5px;
   }
 
+  .section {
+    padding: 4.5rem 0;
+  }
+
+  /* Navigation */
   .nav-menu {
-    display: none; /* Hide default desktop nav */
+    display: none !important;
   }
 
   .nav-menu-toggle {
-    display: flex; /* Show mobile toggle */
+    display: flex !important;
   }
 
+  .nav-actions {
+    gap: 0.75rem;
+  }
+
+  /* Hero Section */
   .hero-container {
     flex-direction: column-reverse;
     text-align: center;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 
   .hero-content {
@@ -54,14 +98,9 @@
     justify-content: center;
   }
 
-  .hero-book-showcase {
-    width: 250px;
-    height: 375px;
-  }
-
-  /* Catalog Page */
+  /* Catalog / Books Page */
   .books-page-container {
-    grid-template-columns: 1fr !important; /* Stack filters */
+    grid-template-columns: 1fr !important;
   }
 
   .filters-sidebar {
@@ -71,11 +110,11 @@
     width: 320px;
     height: 100vh;
     background-color: var(--white);
-    z-index: 2000;
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
+    z-index: 2500;
+    padding: 2.5rem 1.75rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .filters-sidebar.active {
@@ -87,68 +126,179 @@
   }
 
   .mobile-filters-trigger {
-    display: flex !important;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 10px 16px;
+    padding: 12px 20px;
     background: var(--burgundy);
     color: var(--white);
     border: none;
-    border-radius: 4px;
-    font-weight: 500;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
     margin-bottom: 1.5rem;
     cursor: pointer;
+    box-shadow: var(--shadow-sm);
   }
 
   /* Book Details Page */
   .book-details-grid {
     grid-template-columns: 1fr !important;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 
   .book-details-image {
-    max-width: 400px;
+    max-width: 360px;
     margin: 0 auto;
   }
 
-  /* Checkout Grid */
+  /* Cart Page */
+  .cart-page-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem;
+  }
+
+  .cart-summary-column {
+    position: static !important;
+  }
+
+  /* Checkout Page */
   .checkout-grid {
     grid-template-columns: 1fr !important;
+    gap: 2.5rem;
   }
 
   .checkout-summary-column {
-    order: -1; /* Show order summary at the top */
+    position: static !important;
   }
 
-  /* About Page */
-  .about-story-grid {
-    grid-template-columns: 1fr !important;
-    gap: 3rem;
-  }
-
-  /* Contact Page */
+  /* About & Contact */
+  .about-story-grid,
   .contact-grid {
     grid-template-columns: 1fr !important;
-    gap: 3rem;
+    gap: 2.5rem;
+  }
+
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
-/* Mobile Devices (Landscape and large portrait) */
+/* --------------------------------------------
+   4. MOBILE DEVICES (481px - 768px)
+   -------------------------------------------- */
 @media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
   .container {
-    padding: 0 1.5rem;
+    padding: 0 1.25rem;
+  }
+
+  .section {
+    padding: 3.5rem 0;
   }
 
   .section-title {
     font-size: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
   }
 
-  /* Modal responsive stacking */
+  .section-subtitle {
+    font-size: 0.95rem;
+  }
+
+  /* Header & Navigation */
+  .navbar {
+    padding: 1rem 0;
+  }
+
+  .nav-container {
+    padding: 0 1.25rem;
+  }
+
+  .nav-logo {
+    font-size: 1.5rem;
+  }
+
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  .nav-icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Horizontal Slider for Homepage Books */
+  .books-grid {
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .book-card {
+    flex: 0 0 190px !important;
+    height: 480px !important;
+  }
+
+  .book-cover {
+    height: 250px !important;
+  }
+
+  .slider-prev,
+  .slider-next {
+    display: none !important; /* Touch scroll on mobile is smoother */
+  }
+
+  /* Catalog Grid (2 columns on mobile) */
+  .books-grid-catalog {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.25rem !important;
+  }
+
+  .books-grid-catalog .book-card {
+    flex: initial !important;
+    width: 100% !important;
+    height: 470px !important;
+  }
+
+  .books-grid-catalog .book-cover {
+    height: 240px !important;
+  }
+
+  /* Categories Pills */
+  .categories-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .categories-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-btn {
+    flex-shrink: 0;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  /* Quick View Modal */
+  .modal-content {
+    width: 95% !important;
+    max-height: 90vh;
+    padding: 1.5rem !important;
+    overflow-y: auto;
+  }
+
   .modal-book-content {
     grid-template-columns: 1fr !important;
-    gap: 2rem;
+    gap: 1.5rem !important;
   }
 
   .modal-book-cover {
@@ -157,25 +307,25 @@
   }
 
   .modal-book-cover img {
-    max-height: 300px;
+    max-height: 260px;
+    width: auto;
   }
 
-  .modal-content {
-    width: 95%;
-    padding: 2rem;
-  }
-
-  /* Cart page responsiveness */
+  /* Cart Page Table to Card Transformation */
   .cart-table-header {
-    display: none; /* Hide standard headers */
+    display: none !important;
   }
 
   .cart-item-row {
-    grid-template-columns: 80px 1fr !important;
-    grid-template-rows: auto auto auto;
-    gap: 10px;
+    grid-template-columns: 75px 1fr !important;
+    gap: 12px;
+    padding: 1.25rem 0;
     border-bottom: 1px solid var(--paper-dark);
-    padding: 1.5rem 0;
+  }
+
+  .cart-item-img {
+    width: 75px;
+    height: 105px;
   }
 
   .cart-item-info-col {
@@ -184,68 +334,238 @@
 
   .cart-item-qty-col {
     grid-column: 2;
-    margin-top: 10px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
   }
 
   .cart-item-price-col {
     grid-column: 2;
-    margin-top: 10px;
-    font-weight: 600;
+    margin-top: 4px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--burgundy);
   }
 
   .cart-item-remove-col {
     grid-column: 2;
-    margin-top: 10px;
+    margin-top: 4px;
+  }
+
+  /* Checkout Form */
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem;
+  }
+
+  .form-group.full-width {
+    grid-column: span 1 !important;
+  }
+
+  .payment-method-selector {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .card-details-form {
+    grid-template-columns: 1fr !important;
+    padding: 1.25rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 1rem;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  /* Reader Quotes / Testimonials */
+  .reading-experience-title {
+    font-size: 1.8rem;
+  }
+
+  .reading-quote {
+    font-size: 1.15rem;
+    padding: 0 1rem;
+  }
+
+  /* Footer */
+  .footer-top {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .footer-newsletter-form {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .footer-newsletter-btn {
+    width: 100%;
+  }
+
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 2rem;
+  }
+
+  .footer-bottom-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
   }
 }
 
-/* Extra Small Mobile Devices (320px - 480px) */
+/* --------------------------------------------
+   5. SMALL MOBILE DEVICES (<= 480px)
+   -------------------------------------------- */
 @media (max-width: 480px) {
   html {
-    font-size: 13px;
+    font-size: 13.5px;
   }
 
+  .container {
+    padding: 0 1rem;
+  }
+
+  .section {
+    padding: 3rem 0;
+  }
+
+  /* Hero Banner */
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+    line-height: 1.15;
+  }
+
+  .hero-subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
   }
 
   .hero-description {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .hero-cta {
     flex-direction: column;
     width: 100%;
+    gap: 0.75rem;
   }
 
   .hero-cta .btn {
     width: 100%;
+    padding: 14px;
+    text-align: center;
   }
 
-  .nav-container {
-    padding: 0 1rem;
+  /* Book Card Carousel on Smallest Screens */
+  .book-card {
+    flex: 0 0 160px !important;
+    height: 440px !important;
   }
 
-  .nav-logo {
-    font-size: 1.5rem;
+  .book-cover {
+    height: 210px !important;
   }
 
-  .announcement-bar {
-    font-size: 0.8rem;
-    padding: 6px 12px;
+  .book-info {
+    padding: 0.85rem !important;
   }
 
-  /* Grid layouts for cards */
+  .book-title {
+    font-size: 0.95rem !important;
+  }
+
+  .book-author {
+    font-size: 0.8rem !important;
+  }
+
+  .book-price {
+    font-size: 1rem !important;
+  }
+
+  .book-actions .book-action-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .btn-read-more,
+  .book-read-more {
+    font-size: 0.75rem !important;
+    padding: 8px 10px !important;
+  }
+
+  /* Catalog Grid 2-column or 1-column */
   .books-grid-catalog {
-    grid-template-columns: 1fr !important; /* Stack to 1 column on very small screens */
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.85rem !important;
   }
 
-  /* Checkout success card adjustments */
+  .books-grid-catalog .book-card {
+    height: 430px !important;
+  }
+
+  .books-grid-catalog .book-cover {
+    height: 200px !important;
+  }
+
+  /* Auth Modals & Standalone Pages */
+  .auth-wrapper {
+    margin: 100px auto 40px !important;
+    padding: 2rem 1.25rem !important;
+    width: 100% !important;
+  }
+
+  .auth-title {
+    font-size: 1.8rem !important;
+  }
+
+  .login-modal-card {
+    width: 95% !important;
+    padding: 2rem 1.25rem !important;
+  }
+
+  .login-modal-logo {
+    font-size: 1.8rem !important;
+  }
+
+  /* Checkout Receipt */
   .success-card {
     padding: 2rem 1rem !important;
   }
 
   .receipt-box {
-    padding: 1rem !important;
+    padding: 1.25rem 0.85rem !important;
+  }
+
+  .receipt-title {
+    font-size: 1rem !important;
+  }
+
+  /* Footer on smallest mobile */
+  .footer-content {
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem;
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* --------------------------------------------
+   6. EXTRA SMALL MOBILE (<= 360px)
+   -------------------------------------------- */
+@media (max-width: 360px) {
+  .books-grid-catalog {
+    grid-template-columns: 1fr !important;
+  }
+
+  .books-grid-catalog .book-card {
+    max-width: 260px;
+    margin: 0 auto;
   }
 }
