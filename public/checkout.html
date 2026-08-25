@@ -197,31 +197,95 @@
                         <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                     </svg>
                 </div>
-                <h2 class="success-title">Thank You For Your Order!</h2>
-                <p class="success-message">Your payment was processed successfully. A confirmation email has been sent to <span id="successEmail" style="font-weight: 600;"></span>.</p>
+                <h2 class="success-title">Order Confirmed!</h2>
+                <p class="success-message">Thank you for your purchase. We've sent an order confirmation & invoice to <span id="successEmail" style="font-weight: 600; color: var(--burgundy);"></span>.</p>
                 
-                <div class="receipt-box">
-                    <h3 class="receipt-title">ORDER RECEIPT</h3>
+                <!-- Order Status Tracker -->
+                <div class="order-tracker-box">
+                    <div class="tracker-step completed">
+                        <div class="tracker-dot">✓</div>
+                        <span>Confirmed</span>
+                    </div>
+                    <div class="tracker-line completed"></div>
+                    <div class="tracker-step active">
+                        <div class="tracker-dot">📦</div>
+                        <span>Processing</span>
+                    </div>
+                    <div class="tracker-line"></div>
+                    <div class="tracker-step">
+                        <div class="tracker-dot">🚚</div>
+                        <span>Shipped</span>
+                    </div>
+                    <div class="tracker-line"></div>
+                    <div class="tracker-step">
+                        <div class="tracker-dot">🏡</div>
+                        <span>Delivered</span>
+                    </div>
+                </div>
+
+                <div class="receipt-box" id="printableReceipt">
+                    <div class="receipt-header">
+                        <h3 class="receipt-title">LUMORA BOOKS RECEIPT</h3>
+                        <span class="payment-badge" id="receiptPaymentBadge">PAID</span>
+                    </div>
+                    
                     <div class="receipt-row">
                         <span>Order ID:</span>
-                        <strong id="receiptOrderId"></strong>
+                        <strong id="receiptOrderId" style="color: var(--burgundy); font-family: monospace; font-size: 1.05rem;"></strong>
                     </div>
                     <div class="receipt-row">
                         <span>Date:</span>
                         <span id="receiptDate"></span>
                     </div>
+                    <div class="receipt-row">
+                        <span>Payment Method:</span>
+                        <span id="receiptPaymentMethod" style="font-weight: 500;"></span>
+                    </div>
+                    
                     <div class="receipt-divider"></div>
+                    
+                    <div class="receipt-shipping-details">
+                        <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 6px;">Delivering To:</h4>
+                        <p id="receiptCustomerName" style="font-weight: 600; color: var(--ink); margin-bottom: 2px;"></p>
+                        <p id="receiptShippingAddress" style="color: var(--muted); font-size: 0.9rem; line-height: 1.4;"></p>
+                        <p id="receiptCustomerPhone" style="color: var(--muted); font-size: 0.85rem; margin-top: 4px;"></p>
+                    </div>
+
+                    <div class="receipt-divider"></div>
+
                     <div class="receipt-items" id="receiptItems">
                         <!-- Loaded dynamically -->
                     </div>
+
                     <div class="receipt-divider"></div>
+
+                    <div class="receipt-row">
+                        <span>Subtotal:</span>
+                        <span id="receiptSubtotal"></span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Shipping Fee:</span>
+                        <span id="receiptShippingFee"></span>
+                    </div>
                     <div class="receipt-row receipt-total">
                         <span>Total Paid:</span>
-                        <strong id="receiptTotal"></strong>
+                        <strong id="receiptTotal" style="color: var(--burgundy); font-size: 1.3rem;"></strong>
                     </div>
                 </div>
                 
-                <a href="/" class="btn btn-primary continue-shopping-btn hover-lift">CONTINUE SHOPPING</a>
+                <div class="success-actions">
+                    <button type="button" class="btn btn-secondary hover-lift" onclick="window.print()" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        PRINT INVOICE
+                    </button>
+                    <a href="/books.html" class="btn btn-primary hover-lift" style="display: flex; align-items: center; justify-content: center;">
+                        CONTINUE SHOPPING
+                    </a>
+                </div>
             </div>
         </div>
     </main>

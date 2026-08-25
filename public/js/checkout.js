@@ -418,35 +418,91 @@ function clearError(input) {
 function showSuccessScreen(order) {
   // Clear the Cart completely
   localStorage.removeItem('lumoraCart');
+  cart = [];
+  if (typeof updateCartBadge === 'function') {
+    updateCartBadge();
+  }
 
-  // Populate receipt details
-  successEmail.textContent = order.shippingAddress.email;
-  receiptOrderId.textContent = order.orderId;
+  // Populate receipt header & email
+  if (successEmail) successEmail.textContent = order.shippingAddress.email;
+  const receiptOrderIdEl = document.getElementById('receiptOrderId');
+  if (receiptOrderIdEl) receiptOrderIdEl.textContent = order.orderId;
   
-  const orderDate = new Date(order.createdAt);
-  receiptDate.textContent = orderDate.toLocaleDateString('en-IN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+  const orderDate = new Date(order.createdAt || Date.now());
+  const receiptDateEl = document.getElementById('receiptDate');
+  if (receiptDateEl) {
+    receiptDateEl.textContent = orderDate.toLocaleDateString('en-IN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
 
-  receiptItems.innerHTML = order.items.map(item => `
-    <div class="receipt-item">
-      <span class="receipt-item-name">${item.title} <span class="receipt-item-qty">x${item.quantity}</span></span>
-      <span>₹${item.price * item.quantity}</span>
-    </div>
-  `).join('');
+  // Payment method badge & label
+  const receiptPaymentBadge = document.getElementById('receiptPaymentBadge');
+  const receiptPaymentMethod = document.getElementById('receiptPaymentMethod');
+  const method = order.paymentMethod || 'card';
+  
+  if (method === 'cod') {
+    if (receiptPaymentBadge) {
+      receiptPaymentBadge.textContent = 'COD - PENDING';
+      receiptPaymentBadge.style.backgroundColor = '#e67e22';
+    }
+    if (receiptPaymentMethod) receiptPaymentMethod.textContent = 'Cash on Delivery';
+  } else if (method === 'upi') {
+    if (receiptPaymentBadge) {
+      receiptPaymentBadge.textContent = 'PAID (UPI)';
+      receiptPaymentBadge.style.backgroundColor = '#27ae60';
+    }
+    if (receiptPaymentMethod) receiptPaymentMethod.textContent = 'UPI / Instant QR Payment';
+  } else {
+    if (receiptPaymentBadge) {
+      receiptPaymentBadge.textContent = 'PAID';
+      receiptPaymentBadge.style.backgroundColor = '#27ae60';
+    }
+    if (receiptPaymentMethod) receiptPaymentMethod.textContent = 'Credit / Debit Card';
+  }
 
-  receiptTotal.textContent = `₹${order.total}`;
+  // Shipping details
+  const nameEl = document.getElementById('receiptCustomerName');
+  const addrEl = document.getElementById('receiptShippingAddress');
+  const phoneEl = document.getElementById('receiptCustomerPhone');
+  
+  if (nameEl) nameEl.textContent = order.shippingAddress.fullName || 'Valued Customer';
+  if (addrEl) addrEl.textContent = `${order.shippingAddress.address}, ${order.shippingAddress.city} - ${order.shippingAddress.zipCode}`;
+  if (phoneEl) phoneEl.textContent = `Phone: +91 ${order.shippingAddress.phone}`;
 
-  // Animate transition to success panel
-  checkoutGrid.style.opacity = '0';
-  checkoutGrid.style.transform = 'translateY(-20px)';
+  // Items list
+  const receiptItemsEl = document.getElementById('receiptItems');
+  if (receiptItemsEl && order.items) {
+    receiptItemsEl.innerHTML = order.items.map(item => `
+      <div class="receipt-item">
+        <span class="receipt-item-name">${item.title} <span class="receipt-item-qty">x${item.quantity || 1}</span></span>
+        <strong style="color: var(--ink);">₹${(item.price || 0) * (item.quantity || 1)}</strong>
+      </div>
+    `).join('');
+  }
+
+  // Totals breakdown
+  const subtotalEl = document.getElementById('receiptSubtotal');
+  const shippingEl = document.getElementById('receiptShippingFee');
+  const totalEl = document.getElementById('receiptTotal');
+  
+  if (subtotalEl) subtotalEl.textContent = `₹${order.subtotal || order.total || 0}`;
+  if (shippingEl) shippingEl.textContent = (order.shippingFee === 0 || (order.subtotal && order.subtotal >= 1000)) ? 'FREE' : `₹${order.shippingFee || 99}`;
+  if (totalEl) totalEl.textContent = `₹${order.total || 0}`;
+
+  // Animate transition to success panel & scroll to top
+  if (checkoutGrid) {
+    checkoutGrid.style.opacity = '0';
+    checkoutGrid.style.transform = 'translateY(-20px)';
+  }
   
   setTimeout(() => {
-    checkoutGrid.style.display = 'none';
-    successContainer.style.display = 'flex';
-  }, 500);
+    if (checkoutGrid) checkoutGrid.style.display = 'none';
+    if (successContainer) successContainer.style.display = 'flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 400);
 }
