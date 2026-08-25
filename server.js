@@ -35,14 +35,14 @@ async function connectDB() {
   }
 }
 
-// Connect before handling requests
+// Attempt DB connection without blocking API fallbacks
 app.use(async (req, res, next) => {
   try {
     await connectDB();
-    next();
   } catch (err) {
-    res.status(500).json({ error: 'Database connection failed', details: err.message });
+    console.warn('DB connect notice in middleware, continuing with fallbacks:', err.message);
   }
+  next();
 });
 
 // API Routes
