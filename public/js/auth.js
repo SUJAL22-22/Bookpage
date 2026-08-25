@@ -96,7 +96,7 @@ async function updateNavbarAuth() {
         `;
       }
 
-    } else {
+    } else if (response.status === 401 || response.status === 403) {
       // Token is invalid/expired
       localStorage.removeItem('lumoraToken');
       updateNavbarAuth();
