@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Get in touch with LUMORA BOOKS support, editorial teams, or general inquiries.">
+    <title>Contact Us — LUMORA BOOKS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="nav-logo" aria-label="LUMORA Home">LUMORA</a>
+            
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/books.html" class="nav-link">Books</a></li>
+                <li class="nav-dropdown-trigger">
+                    <a href="/books.html" class="nav-link">Categories <span class="dropdown-arrow">▼</span></a>
+                    <ul class="categories-dropdown">
+                        <li><a href="/books.html?category=Fiction">Fiction</a></li>
+                        <li><a href="/books.html?category=Mystery">Mystery</a></li>
+                        <li><a href="/books.html?category=Romance">Romance</a></li>
+                        <li><a href="/books.html?category=Science Fiction">Science Fiction</a></li>
+                        <li><a href="/books.html?category=Fantasy">Fantasy</a></li>
+                        <li><a href="/books.html?category=Biography">Biography</a></li>
+                        <li><a href="/books.html?category=Business">Business</a></li>
+                        <li><a href="/books.html?category=Self Development">Self Development</a></li>
+                        <li><a href="/books.html?category=Technology">Technology</a></li>
+                        <li><a href="/books.html?category=History">History</a></li>
+                    </ul>
+                </li>
+                <li><a href="/best-sellers.html" class="nav-link">Best Sellers</a></li>
+                <li><a href="/new-arrivals.html" class="nav-link">New Arrivals</a></li>
+                <li><a href="/about.html" class="nav-link">About</a></li>
+                <li><a href="/contact.html" class="nav-link active">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="nav-icon-btn" aria-label="Search" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="nav-icon-btn" aria-label="Wishlist" id="wishlistBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <span class="nav-badge" id="wishlistBadge">0</span>
+                </button>
+                <button class="nav-icon-btn" aria-label="Cart" id="cartBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="nav-badge" id="cartBadge">0</span>
+                </button>
+                
+                <!-- Dynamic Auth Menu -->
+                <div class="nav-auth-container" id="navAuthContainer">
+                    <a href="/login.html" class="nav-icon-btn" aria-label="Login/Register" id="authBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                </div>
+
+                <button class="nav-menu-toggle" aria-label="Menu" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-list">
+            <li><a href="/" class="mobile-menu-link">Home</a></li>
+            <li><a href="/books.html" class="mobile-menu-link">Books</a></li>
+            <li><a href="/best-sellers.html" class="mobile-menu-link">Best Sellers</a></li>
+            <li><a href="/new-arrivals.html" class="mobile-menu-link">New Arrivals</a></li>
+            <li><a href="/about.html" class="mobile-menu-link">About Story</a></li>
+            <li><a href="/contact.html" class="mobile-menu-link">Contact Us</a></li>
+            <li id="mobileAuthLink"><a href="/login.html" class="mobile-menu-link">Login</a></li>
+        </ul>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search books, authors, categories..." aria-label="Search">
+            <button class="search-close" aria-label="Close search" id="searchClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container" style="margin-top: 140px; margin-bottom: 6rem;">
+        <div class="contact-grid">
+            <!-- Left Info Column -->
+            <div class="contact-info-column animate-fade-in-up">
+                <div>
+                    <span style="font-size: 0.9rem; text-transform: uppercase; font-weight: 600; color: var(--gold); letter-spacing: 1.5px; display: block; margin-bottom: 8px;">Connect with us</span>
+                    <h1 style="font-size: 2.8rem; color: var(--burgundy); font-weight: 700; line-height: 1.15; margin-bottom: 1rem;">Let's Talk Books</h1>
+                    <p style="color: var(--muted); line-height: 1.6;">Our support team is here to assist with shipping, orders, recommendations, and author events.</p>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="contact-info-card hover-lift">
+                    <div class="contact-info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </div>
+                    <div class="contact-info-details">
+                        <h4>Phone Support</h4>
+                        <p>+1 (234) 567-890</p>
+                        <p style="font-size: 0.85rem; color: var(--muted);">Mon - Fri, 9am - 6pm EST</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-card hover-lift">
+                    <div class="contact-info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="contact-info-details">
+                        <h4>Email Us</h4>
+                        <p><a href="mailto:hello@lumorabooks.com" style="color: inherit; text-decoration: none;">hello@lumorabooks.com</a></p>
+                        <p style="font-size: 0.85rem; color: var(--muted);">We reply in under 24 hours</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-card hover-lift">
+                    <div class="contact-info-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    </div>
+                    <div class="contact-info-details">
+                        <h4>Bookshop Address</h4>
+                        <p>123 Bookworms Street</p>
+                        <p style="font-size: 0.85rem; color: var(--muted);">New York, NY 10001</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Form Column -->
+            <div class="contact-form-column animate-fade-in-up stagger-1">
+                <div class="contact-form-card">
+                    <div id="contactFormStatus" style="padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; display: none;"></div>
+
+                    <form id="contactForm" novalidate>
+                        <div class="form-group">
+                            <label for="contactName">Your Name</label>
+                            <input type="text" id="contactName" class="form-control-input" required placeholder="Jane Doe">
+                            <span class="error-msg" id="contactNameError" style="color: var(--burgundy); font-size: 0.85rem; margin-top: 5px; display: block;"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactEmail">Email Address</label>
+                            <input type="email" id="contactEmail" class="form-control-input" required placeholder="jane@example.com">
+                            <span class="error-msg" id="contactEmailError" style="color: var(--burgundy); font-size: 0.85rem; margin-top: 5px; display: block;"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactSubject">Subject</label>
+                            <input type="text" id="contactSubject" class="form-control-input" required placeholder="Inquiry about order...">
+                            <span class="error-msg" id="contactSubjectError" style="color: var(--burgundy); font-size: 0.85rem; margin-top: 5px; display: block;"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactMessage">Message</label>
+                            <textarea id="contactMessage" class="form-control-input" style="min-height: 150px; resize: vertical;" required placeholder="Write your enquiry here..."></textarea>
+                            <span class="error-msg" id="contactMessageError" style="color: var(--burgundy); font-size: 0.85rem; margin-top: 5px; display: block;"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary auth-btn hover-lift" id="contactSubmitBtn">SEND MESSAGE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">LUMORA</h3>
+                    <p class="footer-tagline">Stories That Stay With You.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>© 2026 LUMORA BOOKS. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-overlay" id="cartOverlay"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <h3>Your Cart</h3>
+                <button class="cart-drawer-close" aria-label="Close cart" id="cartClose">&times;</button>
+            </div>
+            <div class="cart-drawer-body" id="cartItems">
+                <p class="cart-empty">Your cart is empty</p>
+            </div>
+            <div class="cart-drawer-footer">
+                <div class="cart-totals">
+                    <p>Subtotal: <span id="cartSubtotal">₹0</span></p>
+                    <p class="cart-total">Total: <span id="cartTotal">₹0</span></p>
+                </div>
+                <button class="btn btn-primary cart-checkout">CHECKOUT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Drawer -->
+    <div class="cart-drawer" id="wishlistDrawer">
+        <div class="cart-drawer-overlay" id="wishlistOverlay"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <h3>Your Wishlist</h3>
+                <button class="cart-drawer-close" aria-label="Close wishlist" id="wishlistClose">&times;</button>
+            </div>
+            <div class="cart-drawer-body" id="wishlistItems">
+                <p class="cart-empty">Your wishlist is empty</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Loaders -->
+    <script src="/js/script.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/about-contact.js"></script>
+</body>
+</html>

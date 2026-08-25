@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shop our top rated and popular best selling books. Explore curated titles at LUMORA BOOKS.">
+    <title>Best Sellers — LUMORA BOOKS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="nav-logo" aria-label="LUMORA Home">LUMORA</a>
+            
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/books.html" class="nav-link">Books</a></li>
+                <li class="nav-dropdown-trigger">
+                    <a href="/books.html" class="nav-link">Categories <span class="dropdown-arrow">▼</span></a>
+                    <ul class="categories-dropdown">
+                        <li><a href="/books.html?category=Fiction">Fiction</a></li>
+                        <li><a href="/books.html?category=Mystery">Mystery</a></li>
+                        <li><a href="/books.html?category=Romance">Romance</a></li>
+                        <li><a href="/books.html?category=Science Fiction">Science Fiction</a></li>
+                        <li><a href="/books.html?category=Fantasy">Fantasy</a></li>
+                        <li><a href="/books.html?category=Biography">Biography</a></li>
+                        <li><a href="/books.html?category=Business">Business</a></li>
+                        <li><a href="/books.html?category=Self Development">Self Development</a></li>
+                        <li><a href="/books.html?category=Technology">Technology</a></li>
+                        <li><a href="/books.html?category=History">History</a></li>
+                    </ul>
+                </li>
+                <li><a href="/best-sellers.html" class="nav-link active">Best Sellers</a></li>
+                <li><a href="/new-arrivals.html" class="nav-link">New Arrivals</a></li>
+                <li><a href="/about.html" class="nav-link">About</a></li>
+                <li><a href="/contact.html" class="nav-link">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="nav-icon-btn" aria-label="Search" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="nav-icon-btn" aria-label="Wishlist" id="wishlistBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <span class="nav-badge" id="wishlistBadge">0</span>
+                </button>
+                <button class="nav-icon-btn" aria-label="Cart" id="cartBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="nav-badge" id="cartBadge">0</span>
+                </button>
+                
+                <!-- Dynamic Auth Menu -->
+                <div class="nav-auth-container" id="navAuthContainer">
+                    <a href="/login.html" class="nav-icon-btn" aria-label="Login/Register" id="authBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                </div>
+
+                <button class="nav-menu-toggle" aria-label="Menu" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-list">
+            <li><a href="/" class="mobile-menu-link">Home</a></li>
+            <li><a href="/books.html" class="mobile-menu-link">Books</a></li>
+            <li><a href="/best-sellers.html" class="mobile-menu-link">Best Sellers</a></li>
+            <li><a href="/new-arrivals.html" class="mobile-menu-link">New Arrivals</a></li>
+            <li><a href="/about.html" class="mobile-menu-link">About Story</a></li>
+            <li><a href="/contact.html" class="mobile-menu-link">Contact Us</a></li>
+            <li id="mobileAuthLink"><a href="/login.html" class="mobile-menu-link">Login</a></li>
+        </ul>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search books, authors, categories..." aria-label="Search">
+            <button class="search-close" aria-label="Close search" id="searchClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container" style="margin-top: 140px; margin-bottom: 6rem;">
+        <div class="catalog-header animate-fade-in-down">
+            <div>
+                <h1 style="font-size: 2.8rem; color: var(--burgundy); font-weight: 700; margin-bottom: 5px;">Best Sellers</h1>
+                <p class="catalog-results-count" style="font-size: 1.05rem;">The most popular, highly-rated releases in our store.</p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="bestSortSelect" style="font-weight: 500; font-size: 0.9rem;">Sort By:</label>
+                <select id="bestSortSelect" class="catalog-sort-select">
+                    <option value="rating">Highest Rated</option>
+                    <option value="popularity">Popularity (Most Reviews)</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Books Grid -->
+        <div class="books-grid-catalog animate-fade-in-up" id="bestGrid" style="margin-top: 2rem;">
+            <!-- Loaded dynamically -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">LUMORA</h3>
+                    <p class="footer-tagline">Stories That Stay With You.</p>
+                    <p class="footer-description">Discover curated books, author stories, and thoughtful recommendations for curious minds.</p>
+                </div>
+                <div class="footer-newsletter">
+                    <h4 class="footer-heading">Stay Updated</h4>
+                    <p class="footer-newsletter-text">Join our newsletter for new releases and exclusive offers.</p>
+                    <form class="footer-newsletter-form">
+                        <input type="email" placeholder="Enter your email" class="footer-newsletter-input" required>
+                        <button type="submit" class="btn btn-primary footer-newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4 class="footer-heading">Explore</h4>
+                    <ul class="footer-links">
+                        <li><a href="/books.html">Books</a></li>
+                        <li><a href="/best-sellers.html">Best Sellers</a></li>
+                        <li><a href="/new-arrivals.html">New Arrivals</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">About</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about.html">Our Story</a></li>
+                        <li><a href="/contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Help</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="toast-link">Shipping</a></li>
+                        <li><a href="#" class="toast-link">Returns</a></li>
+                        <li><a href="#" class="toast-link">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>© 2026 LUMORA BOOKS. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"></path>
+        </svg>
+    </button>
+
+    <!-- Cart Drawer -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-overlay" id="cartOverlay"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <h3>Your Cart</h3>
+                <button class="cart-drawer-close" aria-label="Close cart" id="cartClose">&times;</button>
+            </div>
+            <div class="cart-drawer-body" id="cartItems">
+                <p class="cart-empty">Your cart is empty</p>
+            </div>
+            <div class="cart-drawer-footer">
+                <div class="cart-totals">
+                    <p>Subtotal: <span id="cartSubtotal">₹0</span></p>
+                    <p class="cart-total">Total: <span id="cartTotal">₹0</span></p>
+                </div>
+                <button class="btn btn-primary cart-checkout">CHECKOUT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Drawer -->
+    <div class="cart-drawer" id="wishlistDrawer">
+        <div class="cart-drawer-overlay" id="wishlistOverlay"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <h3>Your Wishlist</h3>
+                <button class="cart-drawer-close" aria-label="Close wishlist" id="wishlistClose">&times;</button>
+            </div>
+            <div class="cart-drawer-body" id="wishlistItems">
+                <p class="cart-empty">Your wishlist is empty</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Modal -->
+    <div class="modal" id="bookModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal" id="modalClose">&times;</button>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Script Loaders -->
+    <script src="/js/script.js"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        // Custom Inline script for Best Sellers
+        document.addEventListener('DOMContentLoaded', async () => {
+            const bestGrid = document.getElementById('bestGrid');
+            const sortSelect = document.getElementById('bestSortSelect');
+            let bestBooks = [];
+
+            try {
+                const res = await fetch('/api/books');
+                const books = await res.json();
+                
+                // Best Sellers filter: rating >= 4.6 OR featured
+                bestBooks = books.filter(b => b.rating >= 4.6 || b.featured);
+                
+                // Sort by default: highest rated
+                bestBooks.sort((a,b) => b.rating - a.rating);
+                
+                renderBest(bestBooks);
+                
+                if (sortSelect) {
+                    sortSelect.addEventListener('change', () => {
+                        const val = sortSelect.value;
+                        let sorted = [...bestBooks];
+                        if (val === 'rating') sorted.sort((a,b) => b.rating - a.rating);
+                        else if (val === 'popularity') sorted.sort((a,b) => b.reviewsCount - a.reviewsCount);
+                        else if (val === 'price-low') sorted.sort((a,b) => a.price - b.price);
+                        else if (val === 'price-high') sorted.sort((a,b) => b.price - a.price);
+                        renderBest(sorted);
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+                bestGrid.innerHTML = '<p>Error loading best sellers.</p>';
+            }
+
+            function renderBest(items) {
+                const wishlist = JSON.parse(localStorage.getItem('lumoraWishlist')) || [];
+                bestGrid.innerHTML = items.map(book => {
+                    const isInWishlist = wishlist.includes(book._id);
+                    return `
+                        <div class="book-card hover-lift" onclick="window.location.href='/book-details.html?id=${book._id}'">
+                            <div class="book-cover">
+                                <img src="${book.coverImage}" alt="${book.title}">
+                                <span style="position: absolute; top: 12px; left: 12px; background-color: var(--gold); color: var(--white); padding: 4px 8px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; border-radius: 4px; box-shadow: var(--shadow-sm); z-index: 5;">Best Seller</span>
+                            </div>
+                            <div class="book-info">
+                                <span class="book-category">${book.category}</span>
+                                <h3 class="book-title">${book.title}</h3>
+                                <p class="book-author">${book.author}</p>
+                                <div class="book-rating" style="display: flex; gap: 2px; color: var(--gold); margin-bottom: 8px;">
+                                    ${renderStars(book.rating)}
+                                    <span style="color: var(--muted); font-size: 0.8rem; margin-left: 4px;">(${book.reviewsCount})</span>
+                                </div>
+                                <div class="book-meta">
+                                    <span class="book-price">₹${book.price}</span>
+                                    <div class="book-actions">
+                                        <button class="book-action-btn book-wishlist-btn ${isInWishlist ? 'active' : ''} hover-scale" onclick="event.stopPropagation(); toggleBestWishlist('${book._id}')">
+                                            <svg viewBox="0 0 24 24" fill="${isInWishlist ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="book-action-btn book-add-cart hover-scale" onclick="event.stopPropagation(); addToCart('${book._id}'); showToast('Added to cart!');" ${book.stock === 0 ? 'disabled' : ''}>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="9" cy="21" r="1"></circle>
+                                                <circle cx="20" cy="21" r="1"></circle>
+                                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="btn btn-secondary hover-lift" style="width: 100%; margin-top: 1rem;" onclick="event.stopPropagation(); openBookModal('${book._id}')">QUICK VIEW</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function renderStars(rating) {
+                const fullStars = Math.floor(rating);
+                let stars = '';
+                for (let i = 0; i < 5; i++) {
+                    if (i < fullStars) {
+                        stars += `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+                    } else {
+                        stars += `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+                    }
+                }
+                return stars;
+            }
+
+            window.toggleBestWishlist = (id) => {
+                toggleWishlist(id);
+                applySort();
+            };
+
+            function applySort() {
+                const val = sortSelect.value;
+                let sorted = [...bestBooks];
+                if (val === 'rating') sorted.sort((a,b) => b.rating - a.rating);
+                else if (val === 'popularity') sorted.sort((a,b) => b.reviewsCount - a.reviewsCount);
+                else if (val === 'price-low') sorted.sort((a,b) => a.price - b.price);
+                else if (val === 'price-high') sorted.sort((a,b) => b.price - a.price);
+                renderBest(sorted);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -15,24 +15,38 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
+
     <!-- Scroll Progress Indicator -->
     <div class="scroll-progress" aria-hidden="true"></div>
 
     <!-- Navigation -->
     <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <a href="#discover" class="nav-logo" aria-label="LUMORA Home">LUMORA</a>
+            <a href="/" class="nav-logo" aria-label="LUMORA Home">LUMORA</a>
             
             <ul class="nav-menu">
-                <li><a href="#discover" class="nav-link">Discover</a></li>
-                <li><a href="#books" class="nav-link">Books</a></li>
-                <li><a href="#categories" class="nav-link">Categories</a></li>
-                <li><a href="#book-week" class="nav-link">Book of the Week</a></li>
-                <li><a href="#authors" class="nav-link">Authors</a></li>
-                <li><a href="#reading-experience" class="nav-link">Reading Experience</a></li>
-                <li><a href="#journal" class="nav-link">Journal</a></li>
-                <li><a href="#newsletter" class="nav-link">Newsletter</a></li>
-                <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                <li><a href="/" class="nav-link active">Home</a></li>
+                <li><a href="/books.html" class="nav-link">Books</a></li>
+                <li class="nav-dropdown-trigger">
+                    <a href="/books.html" class="nav-link">Categories <span class="dropdown-arrow">▼</span></a>
+                    <ul class="categories-dropdown">
+                        <li><a href="/books.html?category=Fiction">Fiction</a></li>
+                        <li><a href="/books.html?category=Mystery">Mystery</a></li>
+                        <li><a href="/books.html?category=Romance">Romance</a></li>
+                        <li><a href="/books.html?category=Science Fiction">Science Fiction</a></li>
+                        <li><a href="/books.html?category=Fantasy">Fantasy</a></li>
+                        <li><a href="/books.html?category=Biography">Biography</a></li>
+                        <li><a href="/books.html?category=Business">Business</a></li>
+                        <li><a href="/books.html?category=Self Development">Self Development</a></li>
+                        <li><a href="/books.html?category=Technology">Technology</a></li>
+                        <li><a href="/books.html?category=History">History</a></li>
+                    </ul>
+                </li>
+                <li><a href="/best-sellers.html" class="nav-link">Best Sellers</a></li>
+                <li><a href="/new-arrivals.html" class="nav-link">New Arrivals</a></li>
+                <li><a href="/about.html" class="nav-link">About</a></li>
+                <li><a href="/contact.html" class="nav-link">Contact</a></li>
             </ul>
 
             <div class="nav-actions">
@@ -56,6 +70,17 @@
                     </svg>
                     <span class="nav-badge" id="cartBadge">0</span>
                 </button>
+                
+                <!-- Dynamic Auth Menu -->
+                <div class="nav-auth-container" id="navAuthContainer">
+                    <a href="/login.html" class="nav-icon-btn" aria-label="Login/Register" id="authBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                </div>
+
                 <button class="nav-menu-toggle" aria-label="Menu" id="menuToggle">
                     <span></span>
                     <span></span>
@@ -68,15 +93,13 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <ul class="mobile-menu-list">
-            <li><a href="#discover" class="mobile-menu-link">Discover</a></li>
-            <li><a href="#books" class="mobile-menu-link">Books</a></li>
-            <li><a href="#categories" class="mobile-menu-link">Categories</a></li>
-            <li><a href="#book-week" class="mobile-menu-link">Book of the Week</a></li>
-            <li><a href="#authors" class="mobile-menu-link">Authors</a></li>
-            <li><a href="#reading-experience" class="mobile-menu-link">Reading Experience</a></li>
-            <li><a href="#journal" class="mobile-menu-link">Journal</a></li>
-            <li><a href="#newsletter" class="mobile-menu-link">Newsletter</a></li>
-            <li><a href="#testimonials" class="mobile-menu-link">Testimonials</a></li>
+            <li><a href="/" class="mobile-menu-link">Home</a></li>
+            <li><a href="/books.html" class="mobile-menu-link">Books</a></li>
+            <li><a href="/best-sellers.html" class="mobile-menu-link">Best Sellers</a></li>
+            <li><a href="/new-arrivals.html" class="mobile-menu-link">New Arrivals</a></li>
+            <li><a href="/about.html" class="mobile-menu-link">About Story</a></li>
+            <li><a href="/contact.html" class="mobile-menu-link">Contact Us</a></li>
+            <li id="mobileAuthLink"><a href="/login.html" class="mobile-menu-link">Login</a></li>
         </ul>
     </div>
 
@@ -94,31 +117,183 @@
         <div class="search-results" id="searchResults"></div>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero" id="discover">
-        <div class="hero-container">
-            <div class="hero-content">
-                <p class="hero-subtitle animate-fade-in-down stagger-1">WELCOME TO LUMORA</p>
-                <h1 class="hero-title animate-fade-in-up stagger-2">
-                    Every Book<br>
-                    Opens Another<br>
-                    World.
-                </h1>
-                <p class="hero-description animate-fade-in-up stagger-3">Discover stories, ideas and unforgettable characters curated for curious minds.</p>
-                <div class="hero-cta animate-fade-in-up stagger-4">
-                    <a href="#books" class="btn btn-primary hover-lift">EXPLORE BOOKS</a>
-                    <a href="#authors" class="btn btn-secondary hover-lift">DISCOVER AUTHORS</a>
-                </div>
+    <!-- Cinematic Video Background Hero Section -->
+    <section class="hero-video-section" id="videoHero" data-active-slide="0">
+        <!-- Layer 1: Background Video container -->
+        <div class="video-background-container" id="videoContainer">
+            <video class="hero-background-video" id="booksBgVideo" autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1600&h=900&fit=crop">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-turning-pages-of-a-book-close-up-15941-large.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <!-- Layer 2: Dark Cinematic Gradient Overlay -->
+        <div class="dark-cinematic-overlay"></div>
+
+        <!-- Layer 3: Ambient Light Glows -->
+        <div class="ambient-glow-layer">
+            <div class="ambient-light-blob" id="lightBlob"></div>
+        </div>
+
+        <!-- Layer 4: noise grain layer -->
+        <div class="noise-grain-layer"></div>
+
+        <!-- Immersive 3D Floating Book Scene overlays -->
+        <div class="animated-book-scene-fallback" id="bookSceneFallback">
+            <div class="fallback-book" style="top: 15%; left: 55%; width: 120px; height: 180px; transition-delay: 0.1s;" data-depth="0.3">
+                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop" alt="Floating book cover">
             </div>
-            <div class="hero-books">
-                <div class="hero-book hero-book-1 animate-fade-in-right stagger-2 hover-lift">
-                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop" alt="Book cover" loading="lazy">
+            <div class="fallback-book" style="top: 45%; left: 75%; width: 110px; height: 165px; transition-delay: 0.3s;" data-depth="0.6">
+                <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&h=450&fit=crop" alt="Floating book cover">
+            </div>
+            <div class="fallback-book" style="top: 25%; left: 85%; width: 90px; height: 135px; transition-delay: 0.5s;" data-depth="0.9">
+                <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=450&fit=crop" alt="Floating book cover">
+            </div>
+            <div class="fallback-book" style="top: 65%; left: 60%; width: 100px; height: 150px; transition-delay: 0.2s;" data-depth="0.4">
+                <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=300&h=450&fit=crop" alt="Floating book cover">
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="container hero-content-wrapper">
+            <div class="hero-content-grid">
+                
+                <!-- Foreground slides shifting only text and buttons -->
+                <div class="hero-text-area">
+                    
+                    <!-- Slide 1 Content (Active by default) -->
+                    <div class="video-hero-slide active" data-slide-index="0">
+                        <span class="eyebrow-text">Curated Stories • Endless Possibilities</span>
+                        <div class="heading-line-mask">
+                            <h1 class="main-heading"><div class="heading-reveal-inner heading-reveal-line-1">Discover Stories</div></h1>
+                        </div>
+                        <div class="heading-line-mask">
+                            <h1 class="main-heading"><div class="heading-reveal-inner heading-reveal-line-2">That <span class="accent-word">Stay With You.</span></div></h1>
+                        </div>
+                        <div class="hero-description-mask">
+                            <p class="hero-description">Explore carefully selected books, timeless stories, and unforgettable ideas waiting to become part of your world.</p>
+                        </div>
+                        <div class="buttons-row">
+                            <a href="books.html" class="btn-cinematic-primary">
+                                Explore Books
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
+                            <a href="best-sellers.html" class="btn-cinematic-secondary">View Best Sellers</a>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 Content -->
+                    <div class="video-hero-slide" data-slide-index="1">
+                        <span class="eyebrow-text">Just Arrived</span>
+                        <div class="heading-line-mask">
+                            <h1 class="main-heading"><div class="heading-reveal-inner heading-reveal-line-1">Your Next Favorite</div></h1>
+                        </div>
+                        <div class="heading-line-mask">
+                            <h1 class="main-heading"><div class="heading-reveal-inner heading-reveal-line-2"><span class="accent-word">Book Is Waiting.</span></div></h1>
+                        </div>
+                        <div class="hero-description-mask">
+                            <p class="hero-description">Discover fresh releases, powerful stories, and new worlds designed for every kind of reader.</p>
+                        </div>
+                        <div class="buttons-row">
+                            <a href="new-arrivals.html" class="btn-cinematic-primary">
+                                Explore New Arrivals
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
+                            <a href="books.html" class="btn-cinematic-secondary">Browse Collection</a>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 Content -->
+                    <div class="video-hero-slide" data-slide-index="2">
+                        <span class="eyebrow-text">Reader Favorites</span>
+                        <div class="heading-line-mask">
+                            <h1 class="main-heading"><div class="heading-reveal-inner heading-reveal-line-1">Books Everyone Is</div></h1>
+                        </div>
+                        <div class="heading-line-mask">
+                            <h1 class="main-heading"><div class="heading-reveal-inner heading-reveal-line-2"><span class="accent-word">Talking About.</span></div></h1>
+                        </div>
+                        <div class="hero-description-mask">
+                            <p class="hero-description">Explore the stories readers love, recommend, and return to again and again.</p>
+                        </div>
+                        <div class="buttons-row">
+                            <a href="best-sellers.html" class="btn-cinematic-primary">
+                                Shop Best Sellers
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
+                            <a href="books.html" class="btn-cinematic-secondary">Discover More</a>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="hero-book hero-book-2 animate-fade-in-up stagger-3 hover-lift">
-                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop" alt="Book cover" loading="lazy">
+
+            </div>
+        </div>
+
+        <!-- Left Side Scroll Indicator -->
+        <div class="vertical-scroll-action" id="scrollIndicator">
+            <span class="vertical-text">Scroll to explore</span>
+            <div class="scroll-line-indicator"></div>
+        </div>
+
+        <!-- Bottom Statistics panel -->
+        <div class="hero-bottom-stats-container">
+            <div class="hero-stat-box" id="heroStatBox1">
+                <div class="hero-stat-number" data-val="50000">0</div>
+                <div class="hero-stat-label">Happy Readers</div>
+            </div>
+            <div class="hero-stat-box" id="heroStatBox2">
+                <div class="hero-stat-number" data-val="10000">0</div>
+                <div class="hero-stat-label">Books Available</div>
+            </div>
+            <div class="hero-stat-box" id="heroStatBox3">
+                <div class="hero-stat-number" data-val="4.9">0</div>
+                <div class="hero-stat-label">Reader Rating</div>
+            </div>
+        </div>
+
+        <!-- Bottom custom slide tracker -->
+        <div class="slider-controls-container" id="controlsContainer">
+            <div class="controls-inner container">
+                <!-- Left Slide Tracker -->
+                <div class="slide-progress-tracker">
+                    <span class="slide-index-num" id="currentSlideNum">01</span>
+                    <div class="progress-timeline">
+                        <div class="progress-line-active" id="progressTimelineActive"></div>
+                    </div>
+                    <span class="slide-index-num" style="color: rgba(255,255,255,0.4);">03</span>
                 </div>
-                <div class="hero-book hero-book-3 animate-fade-in-left stagger-4 hover-lift">
-                    <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop" alt="Book cover" loading="lazy">
+
+                <!-- Right Controls -->
+                <div class="slider-nav-actions">
+                    <!-- Dots -->
+                    <div class="slider-dots" id="heroDots">
+                        <button class="slider-dot active" data-index="0" aria-label="Slide 1"></button>
+                        <button class="slider-dot" data-index="1" aria-label="Slide 2"></button>
+                        <button class="slider-dot" data-index="2" aria-label="Slide 3"></button>
+                    </div>
+                    <!-- Arrows -->
+                    <div class="arrow-buttons">
+                        <button class="arrow-btn btn-prev" id="btnPrev" aria-label="Previous slide">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                        </button>
+                        <button class="arrow-btn btn-next" id="btnNext" aria-label="Next slide">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -128,8 +303,20 @@
     <section class="section trending" id="books">
         <div class="container">
             <h2 class="section-title">WHAT READERS ARE LOVING</h2>
-            <div class="books-grid" id="booksGrid">
-                <div class="loading-state">Discovering your next story...</div>
+            <div class="slider-wrapper">
+                <button class="slider-btn slider-prev" id="sliderPrev" aria-label="Previous books">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m15 18-6-6 6-6"></path>
+                    </svg>
+                </button>
+                <div class="books-grid" id="booksGrid">
+                    <div class="loading-state">Discovering your next story...</div>
+                </div>
+                <button class="slider-btn slider-next" id="sliderNext" aria-label="Next books">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </section>
@@ -149,6 +336,9 @@
                 <button class="category-btn" data-category="History">History</button>
                 <button class="category-btn" data-category="Business">Business</button>
             </div>
+            <div class="category-results-grid" id="categoryResultsGrid">
+                <!-- Filtered books will appear here -->
+            </div>
         </div>
     </section>
 
@@ -158,21 +348,57 @@
             <h2 class="section-title">BOOK OF THE WEEK</h2>
             <div class="book-week-content">
                 <div class="book-week-cover">
-                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&h=750&fit=crop" alt="The Silent Garden book cover" loading="lazy">
+                    <span class="book-week-badge">Featured Read</span>
+                    <div class="book-week-cover-inner">
+                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&h=750&fit=crop" alt="The Silent Garden book cover" loading="lazy">
+                    </div>
                 </div>
                 <div class="book-week-info">
+                    <span class="book-week-tag">Editor's Pick</span>
                     <h3 class="book-week-title">THE SILENT GARDEN</h3>
-                    <p class="book-week-description">A beautifully written story about memory, identity and the places we carry within us.</p>
-                    <div class="book-week-details">
-                        <p><strong>Author:</strong> Elena Hart</p>
-                        <p><strong>Rating:</strong> 4.8/5</p>
-                        <p><strong>Pages:</strong> 324</p>
-                        <p><strong>Published:</strong> 2024</p>
-                        <p class="book-week-price">₹599</p>
+                    <p class="book-week-description">"A beautifully written story about memory, identity and the places we carry within us. Set in a mysterious garden where secrets bloom like flowers, this novel explores the delicate balance between past and present."</p>
+                    
+                    <div class="book-week-details-grid">
+                        <div class="detail-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                            </svg>
+                            <span><strong>Author:</strong> Elena Hart</span>
+                        </div>
+                        <div class="detail-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                            <span><strong>Rating:</strong> 4.8 / 5.0</span>
+                        </div>
+                        <div class="detail-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span><strong>Pages:</strong> 324 Pages</span>
+                        </div>
+                        <div class="detail-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span><strong>Published:</strong> 2024</span>
+                        </div>
                     </div>
-                    <div class="book-week-cta">
-                        <button class="btn btn-primary book-week-read" data-book-id="featured">READ MORE</button>
-                        <button class="btn btn-secondary book-week-add" data-book-id="featured">ADD TO CART</button>
+
+                    <div class="book-week-price-cta">
+                        <div class="book-week-price-box">
+                            <span class="price-label">Special Price</span>
+                            <span class="book-week-price">₹599</span>
+                        </div>
+                        <div class="book-week-cta">
+                            <button class="btn btn-primary book-week-read hover-lift" data-book-id="featured">READ MORE</button>
+                            <button class="btn btn-secondary book-week-add hover-lift" data-book-id="featured">ADD TO CART</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -224,21 +450,21 @@
                     <span class="journal-category">Culture</span>
                     <h3 class="journal-title">Why We Still Read Physical Books</h3>
                     <p class="journal-date">August 15, 2026</p>
-                    <a href="#" class="journal-link">Read Article</a>
+                    <a href="/article.html" class="journal-link">Read Article</a>
                 </article>
                 <article class="journal-card animate-fade-in-up stagger-2 hover-lift">
                     <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=600&h=400&fit=crop" alt="Storytelling" loading="lazy">
                     <span class="journal-category">Psychology</span>
                     <h3 class="journal-title">The Psychology Behind Great Stories</h3>
                     <p class="journal-date">August 12, 2026</p>
-                    <a href="#" class="journal-link">Read Article</a>
+                    <a href="/article.html" class="journal-link">Read Article</a>
                 </article>
                 <article class="journal-card animate-fade-in-up stagger-3 hover-lift">
                     <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&h=400&fit=crop" alt="Book collection" loading="lazy">
                     <span class="journal-category">Recommendations</span>
                     <h3 class="journal-title">7 Books That Will Change Your Perspective</h3>
                     <p class="journal-date">August 10, 2026</p>
-                    <a href="#" class="journal-link">Read Article</a>
+                    <a href="/article.html" class="journal-link">Read Article</a>
                 </article>
             </div>
         </div>
@@ -306,24 +532,24 @@
                     <p class="footer-tagline">Stories That Stay With You.</p>
                     <p class="footer-description">Discover curated books, author stories, and thoughtful recommendations for curious minds.</p>
                     <div class="footer-social">
-                        <a href="#" class="social-link" aria-label="Instagram">
+                        <a href="#" class="social-link toast-link" aria-label="Instagram">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                             </svg>
                         </a>
-                        <a href="#" class="social-link" aria-label="Facebook">
+                        <a href="#" class="social-link toast-link" aria-label="Facebook">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                             </svg>
                         </a>
-                        <a href="#" class="social-link" aria-label="Twitter">
+                        <a href="#" class="social-link toast-link" aria-label="Twitter">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
                             </svg>
                         </a>
-                        <a href="#" class="social-link" aria-label="Pinterest">
+                        <a href="#" class="social-link toast-link" aria-label="Pinterest">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0z"></path>
                                 <path d="M12 2v2"></path>
@@ -355,27 +581,27 @@
                         <li><a href="#categories">Categories</a></li>
                         <li><a href="#authors">Authors</a></li>
                         <li><a href="#book-week">Book of the Week</a></li>
-                        <li><a href="#">New Releases</a></li>
+                        <li><a href="#" class="toast-link">New Releases</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h4 class="footer-heading">About</h4>
                     <ul class="footer-links">
-                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#" class="toast-link">Our Story</a></li>
                         <li><a href="#journal">Journal</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Press</a></li>
+                        <li><a href="#" class="toast-link">Contact</a></li>
+                        <li><a href="#" class="toast-link">Careers</a></li>
+                        <li><a href="#" class="toast-link">Press</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h4 class="footer-heading">Help</h4>
                     <ul class="footer-links">
-                        <li><a href="#">Shipping</a></li>
-                        <li><a href="#">Returns</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#" class="toast-link">Shipping</a></li>
+                        <li><a href="#" class="toast-link">Returns</a></li>
+                        <li><a href="#" class="toast-link">FAQ</a></li>
+                        <li><a href="#" class="toast-link">Privacy Policy</a></li>
+                        <li><a href="#" class="toast-link">Terms of Service</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -383,8 +609,8 @@
                     <ul class="footer-links">
                         <li><a href="mailto:hello@lumorabooks.com">hello@lumorabooks.com</a></li>
                         <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
-                        <li><a href="#">123 Book Street</a></li>
-                        <li><a href="#">New York, NY 10001</a></li>
+                        <li><a href="#" class="toast-link">123 Book Street</a></li>
+                        <li><a href="#" class="toast-link">New York, NY 10001</a></li>
                     </ul>
                 </div>
             </div>
@@ -392,9 +618,9 @@
                 <div class="footer-bottom-content">
                     <p>© 2026 LUMORA BOOKS. ALL RIGHTS RESERVED.</p>
                     <div class="footer-bottom-links">
-                        <a href="#">Privacy</a>
-                        <a href="#">Terms</a>
-                        <a href="#">Cookies</a>
+                        <a href="#" class="toast-link">Privacy</a>
+                        <a href="#" class="toast-link">Terms</a>
+                        <a href="#" class="toast-link">Cookies</a>
                     </div>
                 </div>
             </div>
@@ -434,6 +660,25 @@
         </div>
     </div>
 
+    <!-- Wishlist Drawer -->
+    <div class="cart-drawer" id="wishlistDrawer">
+        <div class="cart-drawer-overlay" id="wishlistOverlay"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <h3>Your Wishlist</h3>
+                <button class="cart-drawer-close" aria-label="Close wishlist" id="wishlistClose">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="cart-drawer-body" id="wishlistItems">
+                <p class="cart-empty">Your wishlist is empty</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Book Modal -->
     <div class="modal" id="bookModal">
         <div class="modal-overlay" id="modalOverlay"></div>
@@ -451,5 +696,6 @@
     </div>
 
     <script src="/js/script.js"></script>
+    <script src="/js/auth.js"></script>
 </body>
 </html>

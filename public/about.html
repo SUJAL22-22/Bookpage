@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover the story behind LUMORA BOOKS, our mission, vision and the curators of stories.">
+    <title>Our Story — LUMORA BOOKS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="/" class="nav-logo" aria-label="LUMORA Home">LUMORA</a>
+            
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/books.html" class="nav-link">Books</a></li>
+                <li class="nav-dropdown-trigger">
+                    <a href="/books.html" class="nav-link">Categories <span class="dropdown-arrow">▼</span></a>
+                    <ul class="categories-dropdown">
+                        <li><a href="/books.html?category=Fiction">Fiction</a></li>
+                        <li><a href="/books.html?category=Mystery">Mystery</a></li>
+                        <li><a href="/books.html?category=Romance">Romance</a></li>
+                        <li><a href="/books.html?category=Science Fiction">Science Fiction</a></li>
+                        <li><a href="/books.html?category=Fantasy">Fantasy</a></li>
+                        <li><a href="/books.html?category=Biography">Biography</a></li>
+                        <li><a href="/books.html?category=Business">Business</a></li>
+                        <li><a href="/books.html?category=Self Development">Self Development</a></li>
+                        <li><a href="/books.html?category=Technology">Technology</a></li>
+                        <li><a href="/books.html?category=History">History</a></li>
+                    </ul>
+                </li>
+                <li><a href="/best-sellers.html" class="nav-link">Best Sellers</a></li>
+                <li><a href="/new-arrivals.html" class="nav-link">New Arrivals</a></li>
+                <li><a href="/about.html" class="nav-link active">About</a></li>
+                <li><a href="/contact.html" class="nav-link">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="nav-icon-btn" aria-label="Search" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="nav-icon-btn" aria-label="Wishlist" id="wishlistBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <span class="nav-badge" id="wishlistBadge">0</span>
+                </button>
+                <button class="nav-icon-btn" aria-label="Cart" id="cartBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="nav-badge" id="cartBadge">0</span>
+                </button>
+                
+                <!-- Dynamic Auth Menu -->
+                <div class="nav-auth-container" id="navAuthContainer">
+                    <a href="/login.html" class="nav-icon-btn" aria-label="Login/Register" id="authBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                </div>
+
+                <button class="nav-menu-toggle" aria-label="Menu" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-list">
+            <li><a href="/" class="mobile-menu-link">Home</a></li>
+            <li><a href="/books.html" class="mobile-menu-link">Books</a></li>
+            <li><a href="/best-sellers.html" class="mobile-menu-link">Best Sellers</a></li>
+            <li><a href="/new-arrivals.html" class="mobile-menu-link">New Arrivals</a></li>
+            <li><a href="/about.html" class="mobile-menu-link">About Story</a></li>
+            <li><a href="/contact.html" class="mobile-menu-link">Contact Us</a></li>
+            <li id="mobileAuthLink"><a href="/login.html" class="mobile-menu-link">Login</a></li>
+        </ul>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search books, authors, categories..." aria-label="Search">
+            <button class="search-close" aria-label="Close search" id="searchClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container" style="margin-top: 140px; margin-bottom: 6rem;">
+        <!-- Story section -->
+        <section class="about-story-grid">
+            <div class="animate-fade-in-up">
+                <span style="font-size: 0.9rem; text-transform: uppercase; font-weight: 600; color: var(--gold); letter-spacing: 1.5px; display: block; margin-bottom: 8px;">Since 2024</span>
+                <h1 style="font-size: 3rem; color: var(--burgundy); font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem;">Curation for Curious Minds</h1>
+                <p style="font-size: 1.15rem; line-height: 1.8; color: var(--ink); margin-bottom: 1.5rem;">LUMORA was born out of a simple belief: that a great bookstore shouldn't just sell pages, it should curate worlds. We select every single title with care, finding hidden gems and evergreen classics that stay with you long after the final chapter.</p>
+                <p style="font-size: 1.05rem; line-height: 1.8; color: var(--muted);">We host author conversations, write literature reviews, and provide curated bundles for voracious readers. Every book is treated as an artwork, delivered sustainably and securely right to your reading corner.</p>
+            </div>
+            <div class="about-image animate-scale-up">
+                <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop" alt="Lumora bookstore bookshelves">
+            </div>
+        </section>
+
+        <!-- Stats Counters -->
+        <section class="section" style="border-top: 1px solid var(--paper-dark); border-bottom: 1px solid var(--paper-dark);">
+            <h2 class="section-title" style="margin-bottom: 3rem;">LUMORA IN NUMBERS</h2>
+            <div class="about-stats-grid">
+                <div class="stat-card hover-lift animate-fade-in-up stagger-1">
+                    <div class="stat-number" id="readersStat" data-target="15000">0</div>
+                    <div class="stat-label">Happy Readers</div>
+                </div>
+                <div class="stat-card hover-lift animate-fade-in-up stagger-2">
+                    <div class="stat-number" id="booksStat" data-target="2200">0</div>
+                    <div class="stat-label">Curated Titles</div>
+                </div>
+                <div class="stat-card hover-lift animate-fade-in-up stagger-3">
+                    <div class="stat-number" id="ordersStat" data-target="9800">0</div>
+                    <div class="stat-label">Orders Shipped</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="section">
+            <h2 class="section-title">THE CURATORS</h2>
+            <p style="text-align: center; color: var(--muted); max-width: 600px; margin: -2rem auto 3rem;">Meet the team dedicated to reading every page and designing your discovery experience.</p>
+            
+            <div class="team-grid">
+                <div class="team-card hover-lift animate-fade-in-up stagger-1">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop" alt="Sarah Jenkins" class="team-member-img">
+                    <h3 class="team-member-name">Sarah Jenkins</h3>
+                    <p class="team-member-role">Co-Founder & Lead Curator</p>
+                    <p style="padding: 0 1.5rem; font-size: 0.95rem; color: var(--muted);">Sarah has spent 12 years in editorial publishing and handpicks all literary fiction.</p>
+                </div>
+                <div class="team-card hover-lift animate-fade-in-up stagger-2">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=500&fit=crop" alt="Marcus Chen" class="team-member-img">
+                    <h3 class="team-member-name">Marcus Chen</h3>
+                    <p class="team-member-role">Technology & Platform Architect</p>
+                    <p style="padding: 0 1.5rem; font-size: 0.95rem; color: var(--muted);">Marcus designs our recommendation algorithms and oversees platform stability.</p>
+                </div>
+                <div class="team-card hover-lift animate-fade-in-up stagger-3">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop" alt="Elena V." class="team-member-img">
+                    <h3 class="team-member-name">Elena Rostova</h3>
+                    <p class="team-member-role">Arts & Poetry Director</p>
+                    <p style="padding: 0 1.5rem; font-size: 0.95rem; color: var(--muted);">Elena handpicks our designs, layouts, and poetry collections from worldwide presses.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">LUMORA</h3>
+                    <p class="footer-tagline">Stories That Stay With You.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>© 2026 LUMORA BOOKS. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-overlay" id="cartOverlay"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <h3>Your Cart</h3>
+                <button class="cart-drawer-close" aria-label="Close cart" id="cartClose">&times;</button>
+            </div>
+            <div class="cart-drawer-body" id="cartItems">
+                <p class="cart-empty">Your cart is empty</p>
+            </div>
+            <div class="cart-drawer-footer">
+                <div class="cart-totals">
+                    <p>Subtotal: <span id="cartSubtotal">₹0</span></p>
+                    <p class="cart-total">Total: <span id="cartTotal">₹0</span></p>
+                </div>
+                <button class="btn btn-primary cart-checkout">CHECKOUT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Drawer -->
+    <div class="cart-drawer" id="wishlistDrawer">
+        <div class="cart-drawer-overlay" id="wishlistOverlay"></div>
+        <div class="cart-drawer-content">
+            <div class="cart-drawer-header">
+                <h3>Your Wishlist</h3>
+                <button class="cart-drawer-close" aria-label="Close wishlist" id="wishlistClose">&times;</button>
+            </div>
+            <div class="cart-drawer-body" id="wishlistItems">
+                <p class="cart-empty">Your wishlist is empty</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Loaders -->
+    <script src="/js/script.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/about-contact.js"></script>
+</body>
+</html>

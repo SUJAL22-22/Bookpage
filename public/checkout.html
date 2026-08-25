@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LUMORA BOOKS Checkout - Securely finalize your purchase and dive into your next story.">
+    <title>Checkout — LUMORA BOOKS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/checkout.css">
+</head>
+<body>
+    <header class="checkout-header">
+        <div class="checkout-header-container">
+            <a href="/" class="back-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                BACK TO SHOP
+            </a>
+            <a href="/" class="checkout-logo">LUMORA</a>
+            <div class="checkout-secure">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                SECURE CHECKOUT
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-main container">
+        <div class="checkout-grid" id="checkoutGrid">
+            <!-- Checkout Form Column -->
+            <div class="checkout-form-column" id="checkoutFormColumn">
+                <!-- Steps indicators -->
+                <div class="checkout-steps">
+                    <div class="step active" id="step1Indicator">
+                        <span class="step-num">1</span>
+                        <span class="step-title">Shipping</span>
+                    </div>
+                    <div class="step-line" id="stepLine1"></div>
+                    <div class="step" id="step2Indicator">
+                        <span class="step-num">2</span>
+                        <span class="step-title">Payment</span>
+                    </div>
+                </div>
+
+                <!-- Form sections -->
+                <form id="checkoutForm" novalidate>
+                    <!-- Shipping Section -->
+                    <section class="form-section active" id="shippingSection">
+                        <h2 class="form-section-title">Shipping Details</h2>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" required placeholder="John Doe">
+                                <span class="error-msg" id="fullNameError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" required placeholder="john@example.com">
+                                <span class="error-msg" id="emailError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" required placeholder="9876543210">
+                                <span class="error-msg" id="phoneError"></span>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="address">Street Address</label>
+                                <input type="text" id="address" required placeholder="123 Bookworms Street">
+                                <span class="error-msg" id="addressError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" required placeholder="Mumbai">
+                                <span class="error-msg" id="cityError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="zipCode">Zip / Postal Code</label>
+                                <input type="text" id="zipCode" required placeholder="400001">
+                                <span class="error-msg" id="zipCodeError"></span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-next hover-lift" id="goToPaymentBtn">
+                            PROCEED TO PAYMENT
+                        </button>
+                    </section>
+
+                    <!-- Payment Section -->
+                    <section class="form-section" id="paymentSection">
+                        <h2 class="form-section-title">Payment Details</h2>
+                        
+                        <div class="payment-method-selector" style="display: flex; gap: 15px; margin-bottom: 2rem;">
+                            <div class="payment-option active" data-method="card" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
+                                <input type="radio" id="payCard" name="paymentMethod" value="card" checked style="margin-right: 8px; accent-color: var(--burgundy);">
+                                <label for="payCard" style="cursor: pointer; font-weight: 500;">Card Payment</label>
+                            </div>
+                            <div class="payment-option" data-method="upi" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
+                                <input type="radio" id="payUpi" name="paymentMethod" value="upi" style="margin-right: 8px; accent-color: var(--burgundy);">
+                                <label for="payUpi" style="cursor: pointer; font-weight: 500;">UPI / GPay</label>
+                            </div>
+                            <div class="payment-option" data-method="cod" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
+                                <input type="radio" id="payCod" name="paymentMethod" value="cod" style="margin-right: 8px; accent-color: var(--burgundy);">
+                                <label for="payCod" style="cursor: pointer; font-weight: 500;">Cash on Delivery</label>
+                            </div>
+                        </div>
+
+                        <!-- UPI QR Section -->
+                        <div id="upiPaymentForm" style="display: none; text-align: center; border: 1px solid var(--paper-dark); padding: 2rem; border-radius: 8px; background-color: var(--paper); margin-bottom: 2rem;">
+                            <p style="font-weight: 500; margin-bottom: 10px;">Scan QR to pay using any UPI App</p>
+                            <div style="background: #fff; padding: 15px; display: inline-block; border-radius: 4px; border: 1px solid var(--paper-dark); margin-bottom: 15px;">
+                                <!-- QR Mockup SVG -->
+                                <svg width="150" height="150" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm14-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v2h-4v-2zm2 2h2v4h-4v-2h2v-2zm-2 2v2h-2v-2h2zm-2-2h-2v-2h2v2zm-2-2h-2v-2h2v2zm2-2h-2v-2h2v2zm-8 4H4v2h4v-2zm12-4v2h-2v-2h2z"></path>
+                                </svg>
+                            </div>
+                            <p style="font-size: 0.9rem; color: var(--muted);">UPI ID: <strong style="color: var(--burgundy);">lumorabooks@upi</strong></p>
+                        </div>
+
+                        <!-- COD Details Section -->
+                        <div id="codPaymentForm" style="display: none; border: 1px solid var(--paper-dark); padding: 1.5rem; border-radius: 8px; background-color: var(--paper); margin-bottom: 2rem;">
+                            <p style="font-weight: 600; color: var(--burgundy); margin-bottom: 5px;">Cash on Delivery Selected</p>
+                            <p style="font-size: 0.95rem; color: var(--ink); line-height: 1.5;">Please pay the order amount to the courier agent in cash. Ensure someone is available at the destination address to receive the delivery.</p>
+                        </div>
+
+                        <div class="card-details-form" id="cardDetailsForm">
+                            <div class="form-group full-width">
+                                <label for="cardName">Cardholder Name</label>
+                                <input type="text" id="cardName" required placeholder="John Doe">
+                                <span class="error-msg" id="cardNameError"></span>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="cardNumber">Card Number</label>
+                                <input type="text" id="cardNumber" required placeholder="1234 5678 1234 5678" maxlength="19">
+                                <span class="error-msg" id="cardNumberError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="cardExpiry">Expiration Date</label>
+                                <input type="text" id="cardExpiry" required placeholder="MM/YY" maxlength="5">
+                                <span class="error-msg" id="cardExpiryError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="cardCvv">CVV Code</label>
+                                <input type="password" id="cardCvv" required placeholder="123" maxlength="3">
+                                <span class="error-msg" id="cardCvvError"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary hover-lift" id="backToShippingBtn">
+                                BACK TO SHIPPING
+                            </button>
+                            <button type="submit" class="btn btn-primary hover-lift" id="placeOrderBtn">
+                                PLACE ORDER
+                            </button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+
+            <!-- Order Summary Column -->
+            <div class="checkout-summary-column" id="checkoutSummaryColumn">
+                <div class="summary-card">
+                    <h3 class="summary-title">Order Summary</h3>
+                    <div class="summary-items" id="summaryItems">
+                        <!-- Loaded dynamically -->
+                    </div>
+                    <div class="summary-totals">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="summarySubtotal">₹0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span id="summaryShipping">₹0</span>
+                        </div>
+                        <div class="summary-row total-row">
+                            <span>Total</span>
+                            <span id="summaryTotal">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success View (hidden initially) -->
+        <div class="success-container" id="successContainer" style="display: none;">
+            <div class="success-card">
+                <div class="success-icon-wrapper">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+                <h2 class="success-title">Thank You For Your Order!</h2>
+                <p class="success-message">Your payment was processed successfully. A confirmation email has been sent to <span id="successEmail" style="font-weight: 600;"></span>.</p>
+                
+                <div class="receipt-box">
+                    <h3 class="receipt-title">ORDER RECEIPT</h3>
+                    <div class="receipt-row">
+                        <span>Order ID:</span>
+                        <strong id="receiptOrderId"></strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Date:</span>
+                        <span id="receiptDate"></span>
+                    </div>
+                    <div class="receipt-divider"></div>
+                    <div class="receipt-items" id="receiptItems">
+                        <!-- Loaded dynamically -->
+                    </div>
+                    <div class="receipt-divider"></div>
+                    <div class="receipt-row receipt-total">
+                        <span>Total Paid:</span>
+                        <strong id="receiptTotal"></strong>
+                    </div>
+                </div>
+                
+                <a href="/" class="btn btn-primary continue-shopping-btn hover-lift">CONTINUE SHOPPING</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="checkout-footer">
+        <p>&copy; 2026 LUMORA BOOKS. All Rights Reserved. Secure Checkout Powered by SSL.</p>
+    </footer>
+
+    <script src="/js/checkout.js"></script>
+</body>
+</html>

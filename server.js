@@ -6,6 +6,9 @@ const path = require('path');
 
 const bookRoutes = require('./routes/bookRoutes');
 const subscriberRoutes = require('./routes/subscriberRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const authRoutes = require('./routes/authRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +26,9 @@ mongoose.connect(process.env.MONGODB_URI)
 // API Routes
 app.use('/api/books', bookRoutes);
 app.use('/api/subscribers', subscriberRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Serve index.html for root route
 app.get('/', (req, res) => {

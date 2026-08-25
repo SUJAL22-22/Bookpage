@@ -1,0 +1,251 @@
+/* ============================================
+   LUMORA BOOKS - RESPONSIVE LAYOUT SYSTEM
+   ============================================ */
+
+/* Large Screens & Desktop (Default container is 1400px max) */
+
+@media (max-width: 1200px) {
+  html {
+    font-size: 15px;
+  }
+  .hero-title {
+    font-size: 3.5rem;
+  }
+  .books-grid {
+    gap: 1.5rem;
+  }
+}
+
+/* Tablets (Portrait and Landscape) */
+@media (max-width: 992px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .section {
+    padding: 4rem 0;
+  }
+
+  .nav-menu {
+    display: none; /* Hide default desktop nav */
+  }
+
+  .nav-menu-toggle {
+    display: flex; /* Show mobile toggle */
+  }
+
+  .hero-container {
+    flex-direction: column-reverse;
+    text-align: center;
+    gap: 3rem;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-cta {
+    justify-content: center;
+  }
+
+  .hero-image-side {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-book-showcase {
+    width: 250px;
+    height: 375px;
+  }
+
+  /* Catalog Page */
+  .books-page-container {
+    grid-template-columns: 1fr !important; /* Stack filters */
+  }
+
+  .filters-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 320px;
+    height: 100vh;
+    background-color: var(--white);
+    z-index: 2000;
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    overflow-y: auto;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .filters-sidebar.active {
+    left: 0;
+  }
+
+  .filters-close-btn {
+    display: block !important;
+  }
+
+  .mobile-filters-trigger {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 10px 16px;
+    background: var(--burgundy);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+  }
+
+  /* Book Details Page */
+  .book-details-grid {
+    grid-template-columns: 1fr !important;
+    gap: 3rem;
+  }
+
+  .book-details-image {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* Checkout Grid */
+  .checkout-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .checkout-summary-column {
+    order: -1; /* Show order summary at the top */
+  }
+
+  /* About Page */
+  .about-story-grid {
+    grid-template-columns: 1fr !important;
+    gap: 3rem;
+  }
+
+  /* Contact Page */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 3rem;
+  }
+}
+
+/* Mobile Devices (Landscape and large portrait) */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Modal responsive stacking */
+  .modal-book-content {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+
+  .modal-book-cover {
+    display: flex;
+    justify-content: center;
+  }
+
+  .modal-book-cover img {
+    max-height: 300px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 2rem;
+  }
+
+  /* Cart page responsiveness */
+  .cart-table-header {
+    display: none; /* Hide standard headers */
+  }
+
+  .cart-item-row {
+    grid-template-columns: 80px 1fr !important;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
+    border-bottom: 1px solid var(--paper-dark);
+    padding: 1.5rem 0;
+  }
+
+  .cart-item-info-col {
+    grid-column: 2;
+  }
+
+  .cart-item-qty-col {
+    grid-column: 2;
+    margin-top: 10px;
+  }
+
+  .cart-item-price-col {
+    grid-column: 2;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  .cart-item-remove-col {
+    grid-column: 2;
+    margin-top: 10px;
+  }
+}
+
+/* Extra Small Mobile Devices (320px - 480px) */
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-cta .btn {
+    width: 100%;
+  }
+
+  .nav-container {
+    padding: 0 1rem;
+  }
+
+  .nav-logo {
+    font-size: 1.5rem;
+  }
+
+  .announcement-bar {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+
+  /* Grid layouts for cards */
+  .books-grid-catalog {
+    grid-template-columns: 1fr !important; /* Stack to 1 column on very small screens */
+  }
+
+  /* Checkout success card adjustments */
+  .success-card {
+    padding: 2rem 1rem !important;
+  }
+
+  .receipt-box {
+    padding: 1rem !important;
+  }
+}

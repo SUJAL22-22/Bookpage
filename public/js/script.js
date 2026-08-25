@@ -29,6 +29,7 @@ const wishlistBtn = document.getElementById('wishlistBtn');
 const wishlistBadge = document.getElementById('wishlistBadge');
 const booksGrid = document.getElementById('booksGrid');
 const categoriesList = document.getElementById('categoriesList');
+const categoryResultsGrid = document.getElementById('categoryResultsGrid');
 const bookModal = document.getElementById('bookModal');
 const modalOverlay = document.getElementById('modalOverlay');
 const modalClose = document.getElementById('modalClose');
@@ -54,8 +55,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initTestimonials();
   initNewsletter();
   initScrollEffects();
+  initSlider();
+  initHeroSlider();
   updateCartBadge();
   updateWishlistBadge();
+
+  // Handle empty links
+  document.querySelectorAll('.toast-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const text = link.textContent.trim() || link.getAttribute('aria-label');
+      showToast(`${text} section is coming soon!`);
+    });
+  });
 });
 
 // Navigation
@@ -100,51 +112,74 @@ function initNavigation() {
 
 // Search
 function initSearch() {
-  searchBtn.addEventListener('click', () => {
-    searchOverlay.classList.add('active');
-    searchInput.focus();
-  });
+  if (searchBtn) {
+    searchBtn.addEventListener('click', () => {
+      searchOverlay.classList.add('active');
+      searchInput.focus();
+    });
+  }
 
-  searchClose.addEventListener('click', () => {
-    searchOverlay.classList.remove('active');
-    searchInput.value = '';
-    searchResults.innerHTML = '';
-  });
-
-  searchOverlay.addEventListener('click', (e) => {
-    if (e.target === searchOverlay) {
+  if (searchClose) {
+    searchClose.addEventListener('click', () => {
       searchOverlay.classList.remove('active');
       searchInput.value = '';
       searchResults.innerHTML = '';
-    }
-  });
+    });
+  }
+
+  if (searchOverlay) {
+    searchOverlay.addEventListener('click', (e) => {
+      if (e.target === searchOverlay) {
+        searchOverlay.classList.remove('active');
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+      }
+    });
+  }
 
   let searchTimeout;
-  searchInput.addEventListener('input', (e) => {
-    clearTimeout(searchTimeout);
-    const query = e.target.value.toLowerCase().trim();
-    
-    if (query.length < 2) {
-      searchResults.innerHTML = '';
-      return;
-    }
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      const query = e.target.value.toLowerCase().trim();
+      
+      if (query.length < 2) {
+        searchResults.innerHTML = '';
+        return;
+      }
 
-    searchTimeout = setTimeout(() => {
-      performSearch(query);
-    }, 300);
-  });
+      searchTimeout = setTimeout(() => {
+        performSearch(query);
+      }, 300);
+    });
 
-  // Escape key to close search
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
-      searchOverlay.classList.remove('active');
-      searchInput.value = '';
-      searchResults.innerHTML = '';
-    }
-  });
+    // Press Enter to go directly to the first matching book details page
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const query = searchInput.value.toLowerCase().trim();
+        if (query.length >= 2) {
+          const results = books.filter(book => 
+            book.title.toLowerCase().includes(query) ||
+            book.author.toLowerCase().includes(query) ||
+            book.category.toLowerCase().includes(query)
+          );
+          if (results.length > 0) {
+            searchOverlay.classList.remove('active');
+            window.location.href = `/book-details.html?id=${results[0]._id}`;
+          }
+        }
+      } else if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
+        searchOverlay.classList.remove('active');
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+      }
+    });
+  }
 }
 
 function performSearch(query) {
+  if (!searchResults) return;
+
   const results = books.filter(book => 
     book.title.toLowerCase().includes(query) ||
     book.author.toLowerCase().includes(query) ||
@@ -164,30 +199,63 @@ function performSearch(query) {
         ${results.map(book => createBookCard(book)).join('')}
       </div>
     `;
+    // Attach click listeners to wishlist, cart, and detail redirection callbacks
+    attachBookCardListeners(searchResults);
   }
 }
 
 // Cart
 function initCart() {
-  cartBtn.addEventListener('click', () => {
-    cartDrawer.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  });
+  if (cartBtn && cartDrawer) {
+    cartBtn.addEventListener('click', () => {
+      cartDrawer.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  }
 
-  cartClose.addEventListener('click', closeCart);
-  cartOverlay.addEventListener('click', closeCart);
+  if (cartClose) {
+    cartClose.addEventListener('click', closeCart);
+  }
+  if (cartOverlay) {
+    cartOverlay.addEventListener('click', closeCart);
+  }
+
+  const checkoutBtn = document.querySelector('.cart-checkout');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+      if (cart.length > 0) {
+        window.location.href = '/checkout.html';
+      } else {
+        showToast('Your cart is empty!');
+      }
+    });
+  }
 
   function closeCart() {
-    cartDrawer.classList.remove('active');
+    if (cartDrawer) {
+      cartDrawer.classList.remove('active');
+    }
     document.body.style.overflow = '';
   }
 
-  renderCart();
+  if (cartDrawer) {
+    renderCart();
+  }
 }
 
 function addToCart(bookId) {
+  const token = localStorage.getItem('lumoraToken');
+  if (!token) {
+    if (typeof showLoginModal === 'function') {
+      showLoginModal();
+    } else {
+      alert('Please sign in to add books to your cart.');
+    }
+    return false;
+  }
+
   const book = books.find(b => b._id === bookId);
-  if (!book) return;
+  if (!book) return false;
 
   const existingItem = cart.find(item => item._id === bookId);
   if (existingItem) {
@@ -205,6 +273,7 @@ function addToCart(bookId) {
   setTimeout(() => {
     cartBtn.style.transform = '';
   }, 200);
+  return true;
 }
 
 function removeFromCart(bookId) {
@@ -273,10 +342,59 @@ function updateCartBadge() {
 
 // Wishlist
 function initWishlist() {
-  wishlistBtn.addEventListener('click', () => {
-    // Could implement wishlist drawer similar to cart
-    alert('Wishlist feature coming soon!');
-  });
+  const wishlistDrawer = document.getElementById('wishlistDrawer');
+  const wishlistClose = document.getElementById('wishlistClose');
+  const wishlistOverlay = document.getElementById('wishlistOverlay');
+  
+  if (!wishlistDrawer) return;
+
+  if (wishlistBtn) {
+    wishlistBtn.addEventListener('click', () => {
+      wishlistDrawer.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      renderWishlist();
+    });
+  }
+
+  if (wishlistClose) {
+    wishlistClose.addEventListener('click', closeWishlist);
+  }
+  if (wishlistOverlay) {
+    wishlistOverlay.addEventListener('click', closeWishlist);
+  }
+
+  function closeWishlist() {
+    wishlistDrawer.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+function renderWishlist() {
+  const wishlistItems = document.getElementById('wishlistItems');
+  if (!wishlistItems) return;
+
+  if (wishlist.length === 0) {
+    wishlistItems.innerHTML = '<p class="cart-empty">Your wishlist is empty</p>';
+    return;
+  }
+
+  const wishlistBooks = books.filter(b => wishlist.includes(b._id));
+  wishlistItems.innerHTML = wishlistBooks.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-image">
+        <img src="${item.coverImage}" alt="${item.title}" loading="lazy">
+      </div>
+      <div class="cart-item-info">
+        <h4 class="cart-item-title">${item.title}</h4>
+        <p class="cart-item-author">${item.author}</p>
+        <p class="cart-item-price">₹${item.price}</p>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;" onclick="if(addToCart('${item._id}')) showToast('Added to cart!');">ADD TO CART</button>
+          <button class="cart-item-remove" style="margin: auto 0;" onclick="toggleWishlist('${item._id}'); renderWishlist();">Remove</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
 function toggleWishlist(bookId) {
@@ -290,6 +408,14 @@ function toggleWishlist(bookId) {
   localStorage.setItem('lumoraWishlist', JSON.stringify(wishlist));
   updateWishlistBadge();
   renderBooks();
+  
+  // Re-render categories grid
+  if (categoriesList) {
+    const activeBtn = categoriesList.querySelector('.category-btn.active');
+    const category = activeBtn ? activeBtn.dataset.category : 'all';
+    const filtered = category === 'all' ? books : books.filter(book => book.category === category);
+    renderCategoryBooks(filtered);
+  }
 }
 
 function updateWishlistBadge() {
@@ -305,18 +431,59 @@ async function loadBooks() {
     
     books = await response.json();
     renderBooks();
+    renderCategoryBooks(); // Load default category books (All)
   } catch (error) {
     console.error('Error loading books:', error);
-    booksGrid.innerHTML = `
+    const errorHTML = `
       <div class="error-state">
         <p>Failed to load books. Please try again later.</p>
       </div>
     `;
+    booksGrid.innerHTML = errorHTML;
+    if (categoryResultsGrid) {
+      categoryResultsGrid.innerHTML = errorHTML;
+    }
   }
 }
 
-// Render Books
+// Helper to attach event listeners to book card buttons inside a container
+function attachBookCardListeners(container) {
+  if (!container) return;
+  
+  container.querySelectorAll('.book-wishlist-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleWishlist(btn.dataset.bookId);
+    });
+  });
+
+  container.querySelectorAll('.book-add-cart').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (addToCart(btn.dataset.bookId)) {
+        showToast('Added to cart!');
+      }
+    });
+  });
+
+  container.querySelectorAll('.book-read-more').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.location.href = `/book-details.html?id=${btn.dataset.bookId}`;
+    });
+  });
+
+  container.querySelectorAll('.book-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+      window.location.href = `/book-details.html?id=${card.dataset.bookId}`;
+    });
+  });
+}
+
+// Render Books in the slider
 function renderBooks(filteredBooks = books) {
+  if (!booksGrid) return;
   if (filteredBooks.length === 0) {
     booksGrid.innerHTML = `
       <div class="empty-state">
@@ -327,28 +494,24 @@ function renderBooks(filteredBooks = books) {
   }
 
   booksGrid.innerHTML = filteredBooks.map(book => createBookCard(book)).join('');
+  attachBookCardListeners(booksGrid);
+}
+
+// Render Books in the Category Results Grid
+function renderCategoryBooks(filteredBooks = books) {
+  if (!categoryResultsGrid) return;
   
-  // Re-attach event listeners for new elements
-  document.querySelectorAll('.book-wishlist-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleWishlist(btn.dataset.bookId);
-    });
-  });
+  if (filteredBooks.length === 0) {
+    categoryResultsGrid.innerHTML = `
+      <div class="empty-state">
+        <p>No books found in this category</p>
+      </div>
+    `;
+    return;
+  }
 
-  document.querySelectorAll('.book-add-cart').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      addToCart(btn.dataset.bookId);
-    });
-  });
-
-  document.querySelectorAll('.book-read-more').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openBookModal(btn.dataset.bookId);
-    });
-  });
+  categoryResultsGrid.innerHTML = filteredBooks.map(book => createBookCard(book)).join('');
+  attachBookCardListeners(categoryResultsGrid);
 }
 
 function createBookCard(book) {
@@ -406,6 +569,7 @@ function renderStars(rating) {
 
 // Categories
 function initCategories() {
+  if (!categoriesList) return;
   const categoryBtns = categoriesList.querySelectorAll('.category-btn');
   
   categoryBtns.forEach(btn => {
@@ -416,18 +580,8 @@ function initCategories() {
       
       // Filter books
       const category = btn.dataset.category;
-      if (category === 'all') {
-        renderBooks(books);
-      } else {
-        const filtered = books.filter(book => book.category === category);
-        renderBooks(filtered);
-      }
-      
-      // Scroll to books section
-      const booksSection = document.getElementById('books');
-      if (booksSection) {
-        booksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      const filtered = category === 'all' ? books : books.filter(book => book.category === category);
+      renderCategoryBooks(filtered);
     });
   });
 }
@@ -443,17 +597,46 @@ function initModal() {
     }
   });
 
-  // Book of the week buttons
-  document.querySelectorAll('.book-week-read, .book-week-add').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const bookId = btn.dataset.bookId;
-      if (btn.classList.contains('book-week-add')) {
-        addToCart(bookId);
+  // Book of the week container click redirect
+  const bookWeekContent = document.querySelector('.book-week-content');
+  if (bookWeekContent) {
+    bookWeekContent.style.cursor = 'pointer';
+    bookWeekContent.addEventListener('click', (e) => {
+      if (e.target.closest('.book-week-add')) return; // handled separately
+      
+      const silentGardenBook = books.find(b => b.title.toLowerCase().includes("silent garden"));
+      if (silentGardenBook) {
+        window.location.href = `/book-details.html?id=${silentGardenBook._id}`;
       } else {
-        openBookModal(bookId);
+        window.location.href = '/books.html';
       }
     });
-  });
+  }
+
+  // Book of the week explicit actions
+  const bookWeekAdd = document.querySelector('.book-week-add');
+  if (bookWeekAdd) {
+    bookWeekAdd.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const silentGardenBook = books.find(b => b.title.toLowerCase().includes("silent garden"));
+      if (silentGardenBook) {
+        if (addToCart(silentGardenBook._id)) {
+          showToast('Added to cart!');
+        }
+      }
+    });
+  }
+
+  const bookWeekRead = document.querySelector('.book-week-read');
+  if (bookWeekRead) {
+    bookWeekRead.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const silentGardenBook = books.find(b => b.title.toLowerCase().includes("silent garden"));
+      if (silentGardenBook) {
+        window.location.href = `/book-details.html?id=${silentGardenBook._id}`;
+      }
+    });
+  }
 }
 
 function openBookModal(bookId) {
@@ -477,7 +660,7 @@ function openBookModal(bookId) {
         </div>
         <p class="modal-book-price">₹${book.price}</p>
         <div class="modal-book-cta">
-          <button class="btn btn-primary" onclick="addToCart('${book._id}'); closeModal();">ADD TO CART</button>
+          <button class="btn btn-primary" onclick="if(addToCart('${book._id}')) { showToast('Added to cart!'); closeModal(); }">ADD TO CART</button>
           <button class="btn btn-secondary" onclick="toggleWishlist('${book._id}')">
             ${wishlist.includes(book._id) ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
           </button>
@@ -497,6 +680,7 @@ function closeModal() {
 
 // Testimonials
 function initTestimonials() {
+  if (!testimonialTrack || !testimonialDots) return;
   const testimonials = testimonialTrack.querySelectorAll('.testimonial-item');
   
   // Create dots
@@ -507,15 +691,19 @@ function initTestimonials() {
     testimonialDots.appendChild(dot);
   });
 
-  testimonialPrev.addEventListener('click', () => {
-    currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
-    updateTestimonials();
-  });
+  if (testimonialPrev) {
+    testimonialPrev.addEventListener('click', () => {
+      currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+      updateTestimonials();
+    });
+  }
 
-  testimonialNext.addEventListener('click', () => {
-    currentTestimonial = (currentTestimonial + 1) % testimonials.length;
-    updateTestimonials();
-  });
+  if (testimonialNext) {
+    testimonialNext.addEventListener('click', () => {
+      currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+      updateTestimonials();
+    });
+  }
 
   // Auto-advance
   setInterval(() => {
@@ -552,6 +740,7 @@ function updateTestimonials() {
 
 // Newsletter
 function initNewsletter() {
+  if (!newsletterForm) return;
   // Main newsletter form
   newsletterForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -619,6 +808,7 @@ function initNewsletter() {
 function initScrollEffects() {
   // Scroll Progress
   window.addEventListener('scroll', () => {
+    if (!scrollProgress) return;
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     const scrollPercent = (scrollTop / docHeight) * 100;
@@ -627,6 +817,7 @@ function initScrollEffects() {
 
   // Back to Top
   window.addEventListener('scroll', () => {
+    if (!backToTop) return;
     if (window.scrollY > 500) {
       backToTop.classList.add('visible');
     } else {
@@ -634,12 +825,14 @@ function initScrollEffects() {
     }
   });
 
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+  if (backToTop) {
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     });
-  });
+  }
 
   // Intersection Observer for animations
   const observerOptions = {
@@ -664,8 +857,11 @@ function initScrollEffects() {
   });
 
   // Make hero visible immediately
-  document.querySelector('.hero').style.opacity = '1';
-  document.querySelector('.hero').style.transform = 'translateY(0)';
+  const hero = document.querySelector('.hero');
+  if (hero) {
+    hero.style.opacity = '1';
+    hero.style.transform = 'translateY(0)';
+  }
 }
 
 // Make functions globally available
@@ -675,3 +871,293 @@ window.updateQuantity = updateQuantity;
 window.toggleWishlist = toggleWishlist;
 window.openBookModal = openBookModal;
 window.closeModal = closeModal;
+
+// Slider
+function initSlider() {
+  const booksGrid = document.getElementById('booksGrid');
+  const sliderPrev = document.getElementById('sliderPrev');
+  const sliderNext = document.getElementById('sliderNext');
+
+  if (booksGrid && sliderPrev && sliderNext) {
+    const scrollAmount = 300; // Amount to scroll per click
+
+    sliderPrev.addEventListener('click', () => {
+      booksGrid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+
+    sliderNext.addEventListener('click', () => {
+      booksGrid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+  }
+}
+
+// Toast Notification System
+function showToast(message) {
+  let toastContainer = document.getElementById('toastContainer');
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    toastContainer.id = 'toastContainer';
+    toastContainer.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    `;
+    document.body.appendChild(toastContainer);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = 'toast animate-fade-in-up';
+  toast.style.cssText = `
+    background: var(--color-bg);
+    color: var(--color-text);
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    border-left: 4px solid var(--color-primary);
+    transition: opacity 0.3s ease;
+  `;
+  toast.textContent = message;
+
+  toastContainer.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 3000);
+}
+window.showToast = showToast;
+
+// Hero Slider
+function initHeroSlider() {
+  const hero = document.getElementById('videoHero');
+  const video = document.getElementById('booksBgVideo');
+  const slides = document.querySelectorAll('.video-hero-slide');
+  const dots = document.querySelectorAll('.slider-dot');
+  const prevBtn = document.getElementById('btnPrev');
+  const nextBtn = document.getElementById('btnNext');
+  const indexNum = document.getElementById('currentSlideNum');
+  const progressBar = document.getElementById('progressTimelineActive');
+  const controlsContainer = document.getElementById('controlsContainer');
+  const statBoxes = document.querySelectorAll('.hero-stat-box');
+  const scrollInd = document.getElementById('scrollIndicator');
+  const fallbackBooks = document.querySelectorAll('.fallback-book');
+  const videoContainer = document.getElementById('videoContainer');
+  const lightBlob = document.getElementById('lightBlob');
+  
+  if (!slides.length) return;
+  
+  let currentIndex = 0;
+  let autoplayInterval;
+  const slideDuration = 8000; // 8 seconds per slide
+  let startTime = Date.now();
+  let progressInterval;
+
+  // Safe Autoplay verification
+  if (video) {
+    video.muted = true;
+    video.playsInline = true;
+    video.play().catch(() => {
+      // Graceful fallback to poster image
+    });
+    video.addEventListener('loadeddata', () => {
+      video.classList.add('loaded');
+    });
+  }
+
+  // Stagger entry animations
+  setTimeout(() => {
+    if (hero) hero.classList.add('loaded');
+    if (controlsContainer) controlsContainer.classList.add('visible');
+    if (scrollInd) scrollInd.classList.add('visible');
+    statBoxes.forEach(box => box.classList.add('visible'));
+    animateHeroStats();
+  }, 300);
+
+  function changeSlide(index) {
+    let nextIndex = index;
+    if (nextIndex >= slides.length) nextIndex = 0;
+    if (nextIndex < 0) nextIndex = slides.length - 1;
+
+    // Transition slides
+    slides[currentIndex].classList.remove('active');
+    if (dots.length > currentIndex) dots[currentIndex].classList.remove('active');
+
+    currentIndex = nextIndex;
+    slides[currentIndex].classList.add('active');
+    if (dots.length > currentIndex) dots[currentIndex].classList.add('active');
+
+    // Update global container slide index
+    if (hero) hero.setAttribute('data-active-slide', currentIndex);
+
+    // Update controls tracker text
+    if (indexNum) {
+      indexNum.textContent = `0${currentIndex + 1}`;
+    }
+
+    resetTimeline();
+  }
+
+  function startAutoplay() {
+    startTime = Date.now();
+    clearInterval(progressInterval);
+    autoplayInterval = setTimeout(() => {
+      changeSlide(currentIndex + 1);
+    }, slideDuration);
+
+    const updateRate = 1000 / 60;
+    progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min((elapsed / slideDuration) * 100, 100);
+      if (progressBar) {
+        progressBar.style.width = `${percent}%`;
+      }
+    }, updateRate);
+  }
+
+  function resetTimeline() {
+    clearTimeout(autoplayInterval);
+    clearInterval(progressInterval);
+    if (progressBar) progressBar.style.width = '0%';
+    startAutoplay();
+  }
+
+  // Bind controls
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => changeSlide(currentIndex - 1));
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => changeSlide(currentIndex + 1));
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const index = parseInt(dot.getAttribute('data-index'));
+      changeSlide(index);
+    });
+  });
+
+  // Keyboard navigation support
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      changeSlide(currentIndex - 1);
+    } else if (e.key === 'ArrowRight') {
+      changeSlide(currentIndex + 1);
+    }
+  });
+
+  // Touch swiping support
+  if (hero) {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    hero.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    hero.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const threshold = 50;
+      if (touchStartX - touchEndX > threshold) {
+        changeSlide(currentIndex + 1);
+      } else if (touchEndX - touchStartX > threshold) {
+        changeSlide(currentIndex - 1);
+      }
+    }, { passive: true });
+  }
+
+  // Start Autoplay Loop
+  startAutoplay();
+
+  // Mouse Parallax for desktop
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetX = 0;
+  let targetY = 0;
+  const isMobile = window.matchMedia("(max-width: 992px)");
+
+  if (!isMobile.matches) {
+    document.addEventListener('mousemove', (e) => {
+      targetX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+      targetY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+    });
+
+    function parallaxLoop() {
+      mouseX += (targetX - mouseX) * 0.05;
+      mouseY += (targetY - mouseY) * 0.05;
+
+      if (videoContainer) {
+        const shiftX = mouseX * -20;
+        const shiftY = mouseY * -20;
+        videoContainer.style.transform = `translate3d(${shiftX}px, ${shiftY}px, 0)`;
+      }
+
+      if (lightBlob) {
+        const blobX = mouseX * 50;
+        const blobY = mouseY * 50;
+        lightBlob.style.transform = `translate3d(${blobX}px, ${blobY}px, 0)`;
+      }
+
+      fallbackBooks.forEach(book => {
+        const depth = parseFloat(book.getAttribute('data-depth')) || 0.5;
+        const bookX = mouseX * depth * 35;
+        const bookY = mouseY * depth * 35;
+        book.style.marginLeft = `${bookX}px`;
+        book.style.marginTop = `${bookY}px`;
+      });
+
+      requestAnimationFrame(parallaxLoop);
+    }
+    requestAnimationFrame(parallaxLoop);
+  }
+
+  // Drift animations for background fallback books
+  let floatTime = 0;
+  function animateDriftingBooks() {
+    floatTime += 0.008;
+    fallbackBooks.forEach((book, idx) => {
+      const depth = parseFloat(book.getAttribute('data-depth')) || 0.5;
+      const indexOffset = idx * 1.5;
+      const yDrift = Math.sin(floatTime + indexOffset) * 15 * depth;
+      const xDrift = Math.cos((floatTime * 0.7) + indexOffset) * 10 * depth;
+      const zRotate = Math.sin((floatTime * 0.5) + indexOffset) * 5 * depth;
+
+      book.style.transform = `translate3d(${xDrift}px, ${yDrift}px, 0) rotateY(-15deg) rotateZ(${zRotate}deg)`;
+    });
+
+    requestAnimationFrame(animateDriftingBooks);
+  }
+  requestAnimationFrame(animateDriftingBooks);
+
+  // Statistics numbers animation helper
+  function animateHeroStats() {
+    const numbers = document.querySelectorAll('.hero-stat-number');
+    numbers.forEach(elem => {
+      const target = parseFloat(elem.getAttribute('data-val'));
+      const isDecimal = target % 1 !== 0;
+      const duration = 2000;
+      const steps = 60;
+      const increment = target / steps;
+      let current = 0;
+      let frame = 0;
+
+      const timer = setInterval(() => {
+        frame++;
+        current += increment;
+        if (frame >= steps) {
+          clearInterval(timer);
+          elem.textContent = isDecimal ? target.toFixed(1) + '/5' : target.toLocaleString() + '+';
+        } else {
+          elem.textContent = isDecimal ? current.toFixed(1) + '/5' : Math.floor(current).toLocaleString() + '+';
+        }
+      }, duration / steps);
+    });
+  }
+}
