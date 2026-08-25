@@ -66,6 +66,26 @@ const receiptTotal = document.getElementById('receiptTotal');
 
 // Initialize Checkout
 document.addEventListener('DOMContentLoaded', () => {
+  let savedCart = null;
+  try {
+    savedCart = JSON.parse(localStorage.getItem('lumoraCart'));
+  } catch (e) {}
+
+  if (!savedCart || !Array.isArray(savedCart) || savedCart.length === 0) {
+    cart = [{
+      _id: 'static2',
+      title: 'Atomic Habits',
+      author: 'James Clear',
+      price: 599,
+      originalPrice: 799,
+      coverImage: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80',
+      quantity: 1
+    }];
+    localStorage.setItem('lumoraCart', JSON.stringify(cart));
+  } else {
+    cart = savedCart;
+  }
+
   calculateTotals();
   renderSummary();
   initFormFlow();
