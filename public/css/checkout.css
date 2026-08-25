@@ -58,15 +58,21 @@
 
 /* Main Checkout Layout */
 .checkout-main {
-  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
   min-height: calc(100vh - 160px);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .checkout-grid {
   display: grid;
-  grid-template-columns: 7fr 5fr;
-  gap: 4rem;
+  grid-template-columns: 1fr 380px;
+  gap: 2.5rem;
   align-items: start;
+  width: 100%;
+  box-sizing: border-box;
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
@@ -281,16 +287,18 @@
 
 .summary-card {
   background-color: var(--white);
-  border-radius: 4px;
-  padding: 2.5rem;
-  box-shadow: var(--shadow-sm);
+  border-radius: 8px;
+  padding: 2rem 1.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid var(--paper-dark);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .summary-title {
   font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   color: var(--ink);
   border-bottom: 1px solid var(--paper-dark);
   padding-bottom: 1rem;
@@ -299,8 +307,8 @@
 .summary-items {
   max-height: 320px;
   overflow-y: auto;
-  margin-bottom: 2rem;
-  padding-right: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding-right: 0.25rem;
 }
 
 .summary-items::-webkit-scrollbar {
@@ -314,8 +322,9 @@
 
 .summary-item {
   display: flex;
+  align-items: center;
   gap: 1rem;
-  padding: 1rem 0;
+  padding: 0.85rem 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
@@ -324,11 +333,12 @@
 }
 
 .summary-item-img {
-  width: 50px;
-  height: 75px;
+  width: 48px;
+  height: 68px;
   object-fit: cover;
-  border-radius: 2px;
+  border-radius: 4px;
   box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
 }
 
 .summary-item-details {
@@ -336,15 +346,19 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
 }
 
 .summary-item-title {
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 0.2rem;
   line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .summary-item-meta {
@@ -353,25 +367,36 @@
 }
 
 .summary-item-price {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--ink);
-  align-self: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--burgundy);
+  flex-shrink: 0;
+  text-align: right;
 }
 
 .summary-totals {
   border-top: 1px solid var(--paper-dark);
-  padding-top: 1.5rem;
+  padding-top: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.85rem;
+  width: 100%;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.summary-row span:last-child {
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
 }
 
 .summary-row.total-row {
@@ -380,7 +405,13 @@
   font-weight: 700;
   border-top: 1px dashed var(--paper-dark);
   padding-top: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.summary-row.total-row span:last-child {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--burgundy);
 }
 
 /* Success Card View */

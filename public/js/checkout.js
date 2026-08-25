@@ -51,25 +51,6 @@ const receiptTotal = document.getElementById('receiptTotal');
 
 // Initialize Checkout
 document.addEventListener('DOMContentLoaded', () => {
-  if (cart.length === 0) {
-    // Show empty cart state inside checkout grid instead of abrupt alert
-    if (checkoutGrid) {
-      checkoutGrid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; background: var(--white); border-radius: 8px; border: 1px solid var(--paper-dark);">
-          <svg viewBox="0 0 24 24" width="60" height="60" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 20px; color: var(--muted);">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
-          <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 10px; color: var(--ink);">Your Bag is Empty</h2>
-          <p style="color: var(--muted); margin-bottom: 2rem;">Please add books to your shopping cart before proceeding to checkout.</p>
-          <a href="/books.html" class="btn btn-primary">EXPLORE BOOKS</a>
-        </div>
-      `;
-    }
-    return;
-  }
-
   calculateTotals();
   renderSummary();
   initFormFlow();
@@ -101,28 +82,45 @@ function autoFillUserDetails() {
 
 // Calculations
 function calculateTotals() {
-  subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  // Free shipping above ₹1000, else flat ₹99
-  shippingFee = subtotal >= 1000 ? 0 : 99;
-  total = subtotal + shippingFee;
+  if (cart && Array.isArray(cart) && cart.length > 0) {
+    subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
+    // Free shipping above ₹1000, else flat ₹99
+    shippingFee = subtotal >= 1000 ? 0 : 99;
+    total = subtotal + shippingFee;
+  } else {
+    subtotal = 0;
+    shippingFee = 0;
+    total = 0;
+  }
 }
 
 // Render Summary panel
 function renderSummary() {
-  summaryItems.innerHTML = cart.map(item => `
-    <div class="summary-item">
-      <img src="${item.coverImage}" alt="${item.title}" class="summary-item-img">
-      <div class="summary-item-details">
-        <h4 class="summary-item-title">${item.title}</h4>
-        <p class="summary-item-meta">Qty: ${item.quantity}</p>
-      </div>
-      <div class="summary-item-price">₹${item.price * item.quantity}</div>
-    </div>
-  `).join('');
+  if (!summaryItems) return;
 
-  summarySubtotal.textContent = `₹${subtotal}`;
-  summaryShipping.textContent = shippingFee === 0 ? 'FREE' : `₹${shippingFee}`;
-  summaryTotal.textContent = `₹${total}`;
+  if (cart && Array.isArray(cart) && cart.length > 0) {
+    summaryItems.innerHTML = cart.map(item => `
+      <div class="summary-item">
+        <img src="${item.coverImage || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=100'}" alt="${item.title || 'Book'}" class="summary-item-img">
+        <div class="summary-item-details">
+          <h4 class="summary-item-title">${item.title || 'Book Title'}</h4>
+          <p class="summary-item-meta">Qty: ${item.quantity || 1}</p>
+        </div>
+        <div class="summary-item-price">₹${(item.price || 0) * (item.quantity || 1)}</div>
+      </div>
+    `).join('');
+  } else {
+    summaryItems.innerHTML = `
+      <div style="padding: 1.5rem 0; text-align: center; color: var(--muted); font-size: 0.9rem;">
+        <p>No items in cart</p>
+        <a href="/books.html" style="color: var(--burgundy); font-weight: 600; text-decoration: underline; margin-top: 6px; display: inline-block;">+ Add Books</a>
+      </div>
+    `;
+  }
+
+  if (summarySubtotal) summarySubtotal.textContent = `₹${subtotal}`;
+  if (summaryShipping) summaryShipping.textContent = subtotal === 0 ? '₹0' : (shippingFee === 0 ? 'FREE' : `₹${shippingFee}`);
+  if (summaryTotal) summaryTotal.textContent = `₹${total}`;
 }
 
 // Form steps navigation & verification flow
