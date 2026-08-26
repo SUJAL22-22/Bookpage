@@ -1,573 +1,471 @@
 // ============================================
-// LUMORA BOOKS - CHECKOUT CLIENT INTERACTIONS
+// LUMORA BOOKS - CHECKOUT (complete clickable flow)
 // ============================================
 
-// State Management
-let cart = JSON.parse(localStorage.getItem('lumoraCart')) || [];
-
-// Auto-seed default book if cart is empty so Order Summary is always full & ready
-if (!cart || cart.length === 0) {
-  cart = [{
-    _id: 'static2',
-    title: 'Atomic Habits',
-    author: 'James Clear',
-    price: 599,
-    originalPrice: 799,
-    coverImage: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80',
-    quantity: 1
-  }];
-  localStorage.setItem('lumoraCart', JSON.stringify(cart));
+try {
+  cart = JSON.parse(localStorage.getItem('lumoraCart')) || [];
+} catch (e) {
+  cart = [];
 }
 
 let subtotal = 0;
-let shippingFee = 0;
+let shippingFee = 50;
 let total = 0;
 
-// DOM Elements
-const summaryItems = document.getElementById('summaryItems');
-const summarySubtotal = document.getElementById('summarySubtotal');
-const summaryShipping = document.getElementById('summaryShipping');
-const summaryTotal = document.getElementById('summaryTotal');
-
-// Shipping Form Fields
-const fullNameInput = document.getElementById('fullName');
-const emailInput = document.getElementById('email');
-const phoneInput = document.getElementById('phone');
-const addressInput = document.getElementById('address');
-const cityInput = document.getElementById('city');
-const zipCodeInput = document.getElementById('zipCode');
-
-// Payment Form Fields
-const cardNameInput = document.getElementById('cardName');
-const cardNumberInput = document.getElementById('cardNumber');
-const cardExpiryInput = document.getElementById('cardExpiry');
-const cardCvvInput = document.getElementById('cardCvv');
-
-// Flow Buttons & Panels
-const goToPaymentBtn = document.getElementById('goToPaymentBtn');
-const backToShippingBtn = document.getElementById('backToShippingBtn');
-const shippingSection = document.getElementById('shippingSection');
-const paymentSection = document.getElementById('paymentSection');
-const checkoutGrid = document.getElementById('checkoutGrid');
-const successContainer = document.getElementById('successContainer');
-const checkoutForm = document.getElementById('checkoutForm');
-
-// Step Indicators
-const step1Indicator = document.getElementById('step1Indicator');
-const step2Indicator = document.getElementById('step2Indicator');
-const stepLine1 = document.getElementById('stepLine1');
-
-// Success Page Details
-const successEmail = document.getElementById('successEmail');
-const receiptOrderId = document.getElementById('receiptOrderId');
-const receiptDate = document.getElementById('receiptDate');
-const receiptItems = document.getElementById('receiptItems');
-const receiptTotal = document.getElementById('receiptTotal');
-
-// Initialize Checkout
 document.addEventListener('DOMContentLoaded', () => {
-  let savedCart = null;
-  try {
-    savedCart = JSON.parse(localStorage.getItem('lumoraCart'));
-  } catch (e) {}
-
-  if (!savedCart || !Array.isArray(savedCart) || savedCart.length === 0) {
-    cart = [{
-      _id: 'static2',
-      title: 'Atomic Habits',
-      author: 'James Clear',
-      price: 599,
-      originalPrice: 799,
-      coverImage: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80',
-      quantity: 1
-    }];
-    localStorage.setItem('lumoraCart', JSON.stringify(cart));
-  } else {
-    cart = savedCart;
+  cart = safeCart();
+  if (!cart.length) {
+    window.location.href = '/cart.html';
+    return;
   }
 
   calculateTotals();
   renderSummary();
-  initFormFlow();
-  initInputFormatters();
+  updateCompactSummary();
+  updateCodAmount();
+  wireButtons();
+  wirePaymentOptions();
+  wireShippingOptions();
+  wireFormatters();
+  wirePlaceOrder();
   autoFillUserDetails();
+  showStep('address');
 });
 
-// Auto-fill logged in user details
-function autoFillUserDetails() {
-  const token = localStorage.getItem('lumoraToken');
-  if (token) {
-    fetch('/api/auth/profile', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(res => res.json())
-    .then(user => {
-      if (user) {
-        if (user.name && fullNameInput && !fullNameInput.value) {
-          fullNameInput.value = user.name;
-        }
-        if (user.email && emailInput && !emailInput.value) {
-          emailInput.value = user.email;
-        }
-      }
-    })
-    .catch(() => {});
+function safeCart() {
+  try {
+    const c = JSON.parse(localStorage.getItem('lumoraCart')) || [];
+    return Array.isArray(c) ? c.filter((i) => i && i._id && i.quantity > 0) : [];
+  } catch (e) {
+    return [];
   }
 }
 
-// Calculations
-function calculateTotals() {
-  if (cart && Array.isArray(cart) && cart.length > 0) {
-    subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
-    // Free shipping above ₹1000, else flat ₹99
-    shippingFee = subtotal >= 1000 ? 0 : 99;
-    total = subtotal + shippingFee;
-  } else {
-    subtotal = 0;
-    shippingFee = 0;
-    total = 0;
-  }
-}
-
-// Interactive quantity modifier directly in Order Summary
-window.updateSummaryQty = function(index, delta) {
-  if (!cart[index]) return;
-  cart[index].quantity = (cart[index].quantity || 1) + delta;
-  if (cart[index].quantity <= 0) {
-    cart.splice(index, 1);
-  }
+function saveCart() {
   localStorage.setItem('lumoraCart', JSON.stringify(cart));
-  calculateTotals();
-  renderSummary();
-  if (typeof updateCartBadge === 'function') {
-    updateCartBadge();
-  }
-};
+  if (typeof updateCartBadge === 'function') updateCartBadge();
+}
 
-// Render Summary panel
+function calculateTotals() {
+  subtotal = cart.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 1), 0);
+  const selected = document.querySelector('input[name="shippingOption"]:checked');
+  const option = selected ? selected.value : 'standard';
+  if (option === 'express') {
+    shippingFee = 150;
+  } else {
+    shippingFee = subtotal >= 999 ? 0 : 50;
+  }
+  total = subtotal + shippingFee;
+}
+
+function updateCompactSummary() {
+  const el = (id) => document.getElementById(id);
+  if (el('compactSubtotal')) el('compactSubtotal').textContent = `₹${subtotal}`;
+  if (el('compactShipping')) el('compactShipping').textContent = shippingFee === 0 ? 'FREE' : `₹${shippingFee}`;
+  if (el('compactTotal')) el('compactTotal').textContent = `₹${total}`;
+  if (el('summarySubtotal')) el('summarySubtotal').textContent = `₹${subtotal}`;
+  if (el('summaryShipping')) el('summaryShipping').textContent = shippingFee === 0 ? 'FREE' : `₹${shippingFee}`;
+  if (el('summaryTotal')) el('summaryTotal').textContent = `₹${total}`;
+}
+
+function updateCodAmount() {
+  const note = document.getElementById('codAmountNote');
+  if (note) note.textContent = `You will pay ₹${total} when your order is delivered.`;
+}
+
 function renderSummary() {
+  const summaryItems = document.getElementById('summaryItems');
   if (!summaryItems) return;
 
-  if (cart && Array.isArray(cart) && cart.length > 0) {
-    summaryItems.innerHTML = cart.map((item, idx) => `
-      <div class="summary-item">
-        <img src="${item.coverImage || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=100'}" alt="${item.title || 'Book'}" class="summary-item-img">
-        <div class="summary-item-details">
-          <h4 class="summary-item-title">${item.title || 'Book Title'}</h4>
-          <div class="summary-item-meta">
-            <span>Qty:</span>
-            <div class="summary-qty-controls">
-              <button type="button" class="summary-qty-btn" onclick="updateSummaryQty(${idx}, -1)" title="Decrease">−</button>
-              <span>${item.quantity || 1}</span>
-              <button type="button" class="summary-qty-btn" onclick="updateSummaryQty(${idx}, 1)" title="Increase">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="summary-item-price">₹${(item.price || 0) * (item.quantity || 1)}</div>
-      </div>
-    `).join('') + `
-      <a href="/books.html" class="summary-add-more">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        Add More Books
-      </a>
-    `;
-  } else {
+  if (!cart.length) {
     summaryItems.innerHTML = `
-      <div style="padding: 1.5rem 0; text-align: center; color: var(--muted); font-size: 0.9rem;">
+      <div style="padding:1.5rem 0;text-align:center;color:var(--muted);">
         <p>No items in cart</p>
-        <a href="/books.html" style="color: var(--burgundy); font-weight: 600; text-decoration: underline; margin-top: 6px; display: inline-block;">+ Add Books</a>
-      </div>
-    `;
+        <a href="/cart.html" style="color:var(--burgundy);font-weight:600;">Go to Cart</a>
+      </div>`;
+    return;
   }
 
-  if (summarySubtotal) summarySubtotal.textContent = `₹${subtotal}`;
-  if (summaryShipping) summaryShipping.textContent = subtotal === 0 ? '₹0' : (shippingFee === 0 ? 'FREE' : `₹${shippingFee}`);
-  if (summaryTotal) summaryTotal.textContent = `₹${total}`;
-}
+  summaryItems.innerHTML = cart.map((item, idx) => `
+    <div class="summary-item">
+      <img src="${item.coverImage || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=100'}" alt="${escapeHtml(item.title || 'Book')}" class="summary-item-img">
+      <div class="summary-item-details">
+        <h4 class="summary-item-title">${escapeHtml(item.title || 'Book')}</h4>
+        <div class="summary-item-meta">
+          <span>Qty:</span>
+          <div class="summary-qty-controls">
+            <button type="button" class="summary-qty-btn" data-qty-idx="${idx}" data-qty-delta="-1" title="Decrease">−</button>
+            <span>${item.quantity || 1}</span>
+            <button type="button" class="summary-qty-btn" data-qty-idx="${idx}" data-qty-delta="1" title="Increase">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="summary-item-price">₹${(Number(item.price) || 0) * (Number(item.quantity) || 1)}</div>
+    </div>
+  `).join('') + `
+    <a href="/books.html" class="summary-add-more">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Add More Books
+    </a>`;
 
-// Form steps navigation & verification flow
-function initFormFlow() {
-  // Payment option toggles
-  const paymentOptions = document.querySelectorAll('.payment-option');
-  paymentOptions.forEach(opt => {
-    opt.addEventListener('click', () => {
-      paymentOptions.forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      
-      const radio = opt.querySelector('input[type="radio"]');
-      if (radio) radio.checked = true;
-      
-      const method = opt.dataset.method;
-      const cardForm = document.getElementById('cardDetailsForm');
-      const upiForm = document.getElementById('upiPaymentForm');
-      const codForm = document.getElementById('codPaymentForm');
-      
-      if (method === 'card') {
-        if (cardForm) cardForm.style.display = 'block';
-        if (upiForm) upiForm.style.display = 'none';
-        if (codForm) codForm.style.display = 'none';
-      } else if (method === 'upi') {
-        if (cardForm) cardForm.style.display = 'none';
-        if (upiForm) upiForm.style.display = 'block';
-        if (codForm) codForm.style.display = 'none';
-      } else if (method === 'cod') {
-        if (cardForm) cardForm.style.display = 'none';
-        if (upiForm) upiForm.style.display = 'none';
-        if (codForm) codForm.style.display = 'block';
-      }
+  summaryItems.querySelectorAll('.summary-qty-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      updateSummaryQty(Number(btn.dataset.qtyIdx), Number(btn.dataset.qtyDelta));
     });
   });
 
-  // Proceed to payment button
-  goToPaymentBtn.addEventListener('click', () => {
-    if (validateShippingForm()) {
-      // Transition indicators
-      step1Indicator.classList.remove('active');
-      step1Indicator.classList.add('completed');
-      stepLine1.classList.add('active');
-      step2Indicator.add ? step2Indicator.classList.add('active') : step2Indicator.classList.add('active');
+  updateCompactSummary();
+  updateCodAmount();
+}
 
-      // Swap views
-      shippingSection.classList.remove('active');
-      setTimeout(() => {
-        paymentSection.classList.add('active');
-      }, 200);
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+window.updateSummaryQty = function (index, delta) {
+  if (!cart[index]) return;
+  cart[index].quantity = (Number(cart[index].quantity) || 1) + delta;
+  if (cart[index].quantity <= 0) cart.splice(index, 1);
+  saveCart();
+  if (!cart.length) {
+    window.location.href = '/cart.html';
+    return;
+  }
+  calculateTotals();
+  renderSummary();
+};
+
+function showStep(step) {
+  const addressSection = document.getElementById('addressSection');
+  const paymentSection = document.getElementById('paymentSection');
+  const shippingSection = document.getElementById('shippingSection');
+  const s1 = document.getElementById('step1Indicator');
+  const s2 = document.getElementById('step2Indicator');
+  const s3 = document.getElementById('step3Indicator');
+  const l1 = document.getElementById('stepLine1');
+  const l2 = document.getElementById('stepLine2');
+
+  [addressSection, paymentSection, shippingSection].forEach((el) => el && el.classList.remove('active'));
+  [s1, s2, s3].forEach((el) => {
+    if (!el) return;
+    el.classList.remove('active', 'completed');
+  });
+  if (l1) l1.classList.remove('active');
+  if (l2) l2.classList.remove('active');
+
+  if (step === 'address') {
+    if (addressSection) addressSection.classList.add('active');
+    if (s1) s1.classList.add('active');
+  } else if (step === 'payment') {
+    if (paymentSection) paymentSection.classList.add('active');
+    if (s1) s1.classList.add('completed');
+    if (l1) l1.classList.add('active');
+    if (s2) s2.classList.add('active');
+  } else if (step === 'shipping') {
+    if (shippingSection) shippingSection.classList.add('active');
+    if (s1) s1.classList.add('completed');
+    if (s2) s2.classList.add('completed');
+    if (l1) l1.classList.add('active');
+    if (l2) l2.classList.add('active');
+    if (s3) s3.classList.add('active');
+    calculateTotals();
+    updateCompactSummary();
+    updateCodAmount();
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.handleGoToPayment = function (event) {
+  if (event) event.preventDefault();
+  if (!validateAddressForm()) return;
+  showStep('payment');
+};
+
+window.handleBackToAddress = function (event) {
+  if (event) event.preventDefault();
+  showStep('address');
+};
+
+window.handleGoToShipping = function (event) {
+  if (event) event.preventDefault();
+  if (!validatePaymentForm()) return;
+  showStep('shipping');
+};
+
+window.handleBackToPayment = function (event) {
+  if (event) event.preventDefault();
+  showStep('payment');
+};
+
+window.selectPaymentMethod = function (method) {
+  const radio = document.querySelector(`input[name="paymentMethod"][value="${method}"]`);
+  if (radio) radio.checked = true;
+
+  document.querySelectorAll('.payment-option').forEach((opt) => {
+    opt.classList.toggle('active', opt.dataset.method === method);
+  });
+
+  const cardForm = document.getElementById('cardDetailsForm');
+  const upiForm = document.getElementById('upiPaymentForm');
+  const codForm = document.getElementById('codPaymentForm');
+  if (cardForm) cardForm.style.display = method === 'card' ? 'block' : 'none';
+  if (upiForm) upiForm.style.display = method === 'upi' ? 'block' : 'none';
+  if (codForm) codForm.style.display = method === 'cod' ? 'block' : 'none';
+  updateCodAmount();
+};
+
+window.selectShipping = function (option) {
+  const radio = document.querySelector(`input[name="shippingOption"][value="${option}"]`);
+  if (radio) radio.checked = true;
+  document.querySelectorAll('.shipping-option').forEach((opt) => opt.classList.remove('selected'));
+  const el = document.getElementById(option === 'express' ? 'expressOption' : 'standardOption');
+  if (el) el.classList.add('selected');
+  calculateTotals();
+  updateCompactSummary();
+  updateCodAmount();
+};
+
+function wireButtons() {
+  const map = [
+    ['goToPaymentBtn', handleGoToPayment],
+    ['backToAddressBtn', handleBackToAddress],
+    ['goToShippingBtn', handleGoToShipping],
+    ['backToPaymentBtn', handleBackToPayment]
+  ];
+  map.forEach(([id, fn]) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.onclick = (e) => fn(e);
     }
   });
+}
 
-  // Back to shipping button
-  backToShippingBtn.addEventListener('click', () => {
-    // Transition indicators
-    step2Indicator.classList.remove('active');
-    stepLine1.classList.remove('active');
-    step1Indicator.classList.remove('completed');
-    step1Indicator.classList.add('active');
-
-    // Swap views
-    paymentSection.classList.remove('active');
-    setTimeout(() => {
-      shippingSection.classList.add('active');
-    }, 200);
+function wirePaymentOptions() {
+  document.querySelectorAll('.payment-option').forEach((opt) => {
+    opt.addEventListener('click', () => selectPaymentMethod(opt.dataset.method));
   });
+}
 
-  // Submit Order form
-  checkoutForm.addEventListener('submit', async (e) => {
+function wireShippingOptions() {
+  document.querySelectorAll('.shipping-option').forEach((opt) => {
+    opt.addEventListener('click', () => {
+      const radio = opt.querySelector('input[type="radio"]');
+      if (radio) selectShipping(radio.value);
+    });
+  });
+}
+
+function wireFormatters() {
+  const cardNumber = document.getElementById('cardNumber');
+  const cardExpiry = document.getElementById('cardExpiry');
+  const phone = document.getElementById('phone');
+  const zipCode = document.getElementById('zipCode');
+
+  if (cardNumber) {
+    cardNumber.addEventListener('input', (e) => {
+      const value = e.target.value.replace(/\D/g, '').slice(0, 16);
+      e.target.value = (value.match(/.{1,4}/g) || []).join(' ');
+    });
+  }
+  if (cardExpiry) {
+    cardExpiry.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '').slice(0, 4);
+      if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+      e.target.value = value;
+    });
+  }
+  if (phone) phone.addEventListener('input', (e) => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10); });
+  if (zipCode) zipCode.addEventListener('input', (e) => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
+}
+
+function showError(input, message) {
+  if (!input) return;
+  const formGroup = input.parentElement;
+  formGroup.classList.add('invalid');
+  const errorSpan = formGroup.querySelector('.error-msg');
+  if (errorSpan) errorSpan.textContent = message;
+}
+
+function clearError(input) {
+  if (!input) return;
+  input.parentElement.classList.remove('invalid');
+  const errorSpan = input.parentElement.querySelector('.error-msg');
+  if (errorSpan) errorSpan.textContent = '';
+}
+
+function validateAddressForm() {
+  let ok = true;
+  const fullName = document.getElementById('fullName');
+  const email = document.getElementById('email');
+  const phone = document.getElementById('phone');
+  const address = document.getElementById('address');
+  const city = document.getElementById('city');
+  const zipCode = document.getElementById('zipCode');
+
+  if (!fullName?.value.trim()) { showError(fullName, 'Full Name is required'); ok = false; }
+  else clearError(fullName);
+
+  const emailVal = email?.value.trim() || '';
+  if (!emailVal) { showError(email, 'Email Address is required'); ok = false; }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { showError(email, 'Enter a valid email'); ok = false; }
+  else clearError(email);
+
+  const phoneVal = phone?.value.trim() || '';
+  if (!/^\d{10}$/.test(phoneVal)) { showError(phone, 'Enter valid 10-digit mobile'); ok = false; }
+  else clearError(phone);
+
+  if (!address?.value.trim()) { showError(address, 'Street Address is required'); ok = false; }
+  else clearError(address);
+
+  if (!city?.value.trim()) { showError(city, 'City is required'); ok = false; }
+  else clearError(city);
+
+  if (!/^\d{5,6}$/.test(zipCode?.value.trim() || '')) { showError(zipCode, 'Enter valid 5 or 6-digit PIN code'); ok = false; }
+  else clearError(zipCode);
+
+  return ok;
+}
+
+function validatePaymentForm() {
+  const method = document.querySelector('input[name="paymentMethod"]:checked');
+  if (!method) {
+    alert('Please select a payment method');
+    return false;
+  }
+  if (method.value !== 'card') return true;
+
+  let ok = true;
+  const cardName = document.getElementById('cardName');
+  const cardNumber = document.getElementById('cardNumber');
+  const cardExpiry = document.getElementById('cardExpiry');
+  const cardCvv = document.getElementById('cardCvv');
+
+  if (!cardName?.value.trim()) { showError(cardName, 'Cardholder Name is required'); ok = false; }
+  else clearError(cardName);
+
+  const digits = (cardNumber?.value || '').replace(/\s/g, '');
+  if (digits.length !== 16) { showError(cardNumber, 'Card Number must be 16 digits'); ok = false; }
+  else clearError(cardNumber);
+
+  if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExpiry?.value.trim() || '')) {
+    showError(cardExpiry, 'Expiry must be MM/YY');
+    ok = false;
+  } else clearError(cardExpiry);
+
+  if (!/^\d{3}$/.test(cardCvv?.value.trim() || '')) { showError(cardCvv, 'CVV must be 3 digits'); ok = false; }
+  else clearError(cardCvv);
+
+  if (!ok) alert('Please fill valid card details');
+  return ok;
+}
+
+function autoFillUserDetails() {
+  const token = localStorage.getItem('lumoraToken');
+  if (!token) return;
+  fetch('/api/auth/profile', { headers: { Authorization: `Bearer ${token}` } })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((user) => {
+      if (!user) return;
+      const fullName = document.getElementById('fullName');
+      const email = document.getElementById('email');
+      const phone = document.getElementById('phone');
+      if (user.name && fullName && !fullName.value) fullName.value = user.name;
+      if (user.email && email && !email.value) email.value = user.email;
+      if (user.phone && phone && !phone.value) phone.value = String(user.phone).replace(/\D/g, '').slice(-10);
+    })
+    .catch(() => {});
+}
+
+function wirePlaceOrder() {
+  const form = document.getElementById('checkoutForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!validatePaymentForm()) return;
 
-    // Place Order button disabled state
+    if (!validateAddressForm()) {
+      showStep('address');
+      return;
+    }
+    if (!validatePaymentForm()) {
+      showStep('payment');
+      return;
+    }
+
+    cart = safeCart();
+    if (!cart.length) {
+      alert('Your cart is empty');
+      window.location.href = '/cart.html';
+      return;
+    }
+
     const submitBtn = document.getElementById('placeOrderBtn');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'PLACING ORDER...';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'PLACING ORDER...';
+    }
 
-    const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'card';
+    const shippingOption = document.querySelector('input[name="shippingOption"]:checked')?.value || 'standard';
 
-    // Prepare payload
-    const orderPayload = {
-      items: cart.map(item => ({
-        bookId: item._id,
-        title: item.title,
-        price: item.price,
-        quantity: item.quantity
-      })),
+    const payload = {
+      items: cart.map((item) => ({ bookId: item._id, quantity: item.quantity })),
       shippingAddress: {
-        fullName: fullNameInput.value.trim(),
-        email: emailInput.value.trim(),
-        phone: phoneInput.value.trim(),
-        address: addressInput.value.trim(),
-        city: cityInput.value.trim(),
-        zipCode: zipCodeInput.value.trim()
+        fullName: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        zipCode: document.getElementById('zipCode').value.trim()
       },
-      paymentMethod: selectedMethod,
-      subtotal,
-      shippingFee,
-      total
+      paymentMethod,
+      shippingOption
     };
 
     try {
+      const token = localStorage.getItem('lumoraToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const response = await fetch('/api/orders', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderPayload)
+        headers,
+        body: JSON.stringify(payload)
       });
-
       const data = await response.json();
 
-      if (response.ok) {
-        showSuccessScreen(data.order);
-      } else {
-        alert(data.message || 'An error occurred. Please try again.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'PLACE ORDER';
+      if (response.ok && data.order) {
+        localStorage.removeItem('lumoraCart');
+        sessionStorage.setItem('lumoraLastOrderId', data.order.orderId);
+        try {
+          const guest = JSON.parse(localStorage.getItem('lumoraGuestOrders') || '[]');
+          if (!guest.includes(data.order.orderId)) {
+            guest.unshift(data.order.orderId);
+            localStorage.setItem('lumoraGuestOrders', JSON.stringify(guest.slice(0, 20)));
+          }
+        } catch (err) { /* ignore */ }
+
+        window.location.href = `/order-success.html?orderId=${encodeURIComponent(data.order.orderId)}`;
+        return;
       }
-    } catch (error) {
-      console.error('Order request error:', error);
-      alert('An error occurred connecting to the server. Please try again.');
+
+      alert(data.message || 'Order failed. Please try again.');
+    } catch (err) {
+      console.error(err);
+      alert('Could not connect to server. Is it running on port 3005?');
+    }
+
+    if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'PLACE ORDER';
     }
   });
-}
-
-// Input Formatters
-function initInputFormatters() {
-  // Format Card Number (adds space every 4 digits)
-  cardNumberInput.addEventListener('input', (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-    let formatted = value.match(/.{1,4}/g);
-    e.target.value = formatted ? formatted.join(' ') : '';
-  });
-
-  // Format Card Expiry (MM/YY)
-  cardExpiryInput.addEventListener('input', (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 2) {
-      e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
-    } else {
-      e.target.value = value;
-    }
-  });
-
-  // Phone validation (only digits)
-  phoneInput.addEventListener('input', (e) => {
-    e.target.value = e.target.value.replace(/\D/g, '');
-  });
-
-  // ZipCode validation (only digits)
-  zipCodeInput.addEventListener('input', (e) => {
-    e.target.value = e.target.value.replace(/\D/g, '');
-  });
-}
-
-// Shipping Validation
-function validateShippingForm() {
-  let isValid = true;
-
-  // Name check
-  if (!fullNameInput.value.trim()) {
-    showError(fullNameInput, 'Full Name is required');
-    isValid = false;
-  } else {
-    clearError(fullNameInput);
-  }
-
-  // Email check
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailInput.value.trim()) {
-    showError(emailInput, 'Email Address is required');
-    isValid = false;
-  } else if (!emailRegex.test(emailInput.value.trim())) {
-    showError(emailInput, 'Please enter a valid email address');
-    isValid = false;
-  } else {
-    clearError(emailInput);
-  }
-
-  // Phone check
-  if (!phoneInput.value.trim()) {
-    showError(phoneInput, 'Phone Number is required');
-    isValid = false;
-  } else if (phoneInput.value.trim().length < 10) {
-    showError(phoneInput, 'Please enter a valid 10-digit phone number');
-    isValid = false;
-  } else {
-    clearError(phoneInput);
-  }
-
-  // Address check
-  if (!addressInput.value.trim()) {
-    showError(addressInput, 'Street Address is required');
-    isValid = false;
-  } else {
-    clearError(addressInput);
-  }
-
-  // City check
-  if (!cityInput.value.trim()) {
-    showError(cityInput, 'City is required');
-    isValid = false;
-  } else {
-    clearError(cityInput);
-  }
-
-  // ZipCode check
-  if (!zipCodeInput.value.trim()) {
-    showError(zipCodeInput, 'Zip Code is required');
-    isValid = false;
-  } else if (zipCodeInput.value.trim().length < 6) {
-    showError(zipCodeInput, 'Please enter a valid 6-digit zip code');
-    isValid = false;
-  } else {
-    clearError(zipCodeInput);
-  }
-
-  return isValid;
-}
-
-// Payment Validation
-function validatePaymentForm() {
-  const activeMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-  if (activeMethod !== 'card') {
-    return true; // Bypass card checks for UPI / COD
-  }
-
-  let isValid = true;
-
-  // Cardholder Name
-  if (!cardNameInput.value.trim()) {
-    showError(cardNameInput, 'Cardholder Name is required');
-    isValid = false;
-  } else {
-    clearError(cardNameInput);
-  }
-
-  // Card Number (needs 16 digits, 19 chars formatted)
-  const cardNo = cardNumberInput.value.replace(/\s/g, '');
-  if (!cardNumberInput.value.trim()) {
-    showError(cardNumberInput, 'Card Number is required');
-    isValid = false;
-  } else if (cardNo.length < 16) {
-    showError(cardNumberInput, 'Card Number must be 16 digits');
-    isValid = false;
-  } else {
-    clearError(cardNumberInput);
-  }
-
-  // Expiry (MM/YY)
-  const expiryRegex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
-  if (!cardExpiryInput.value.trim()) {
-    showError(cardExpiryInput, 'Expiration Date is required');
-    isValid = false;
-  } else if (!expiryRegex.test(cardExpiryInput.value.trim())) {
-    showError(cardExpiryInput, 'Use MM/YY format');
-    isValid = false;
-  } else {
-    clearError(cardExpiryInput);
-  }
-
-  // CVV
-  if (!cardCvvInput.value.trim()) {
-    showError(cardCvvInput, 'CVV Code is required');
-    isValid = false;
-  } else if (cardCvvInput.value.trim().length < 3) {
-    showError(cardCvvInput, 'CVV must be 3 digits');
-    isValid = false;
-  } else {
-    clearError(cardCvvInput);
-  }
-
-  return isValid;
-}
-
-// Form Field UI Error Utilities
-function showError(input, message) {
-  const formGroup = input.parentElement;
-  formGroup.classList.add('invalid');
-  const errorSpan = formGroup.querySelector('.error-msg');
-  if (errorSpan) {
-    errorSpan.textContent = message;
-  }
-}
-
-function clearError(input) {
-  const formGroup = input.parentElement;
-  formGroup.classList.remove('invalid');
-}
-
-// Show Order Success screen and reset cart
-function showSuccessScreen(order) {
-  // Clear the Cart completely
-  localStorage.removeItem('lumoraCart');
-  cart = [];
-  if (typeof updateCartBadge === 'function') {
-    updateCartBadge();
-  }
-
-  // Populate receipt header & email
-  if (successEmail) successEmail.textContent = order.shippingAddress.email;
-  const receiptOrderIdEl = document.getElementById('receiptOrderId');
-  if (receiptOrderIdEl) receiptOrderIdEl.textContent = order.orderId;
-  
-  const orderDate = new Date(order.createdAt || Date.now());
-  const receiptDateEl = document.getElementById('receiptDate');
-  if (receiptDateEl) {
-    receiptDateEl.textContent = orderDate.toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
-  // Payment method badge & label
-  const receiptPaymentBadge = document.getElementById('receiptPaymentBadge');
-  const receiptPaymentMethod = document.getElementById('receiptPaymentMethod');
-  const method = order.paymentMethod || 'card';
-  
-  if (method === 'cod') {
-    if (receiptPaymentBadge) {
-      receiptPaymentBadge.textContent = 'COD - PENDING';
-      receiptPaymentBadge.style.backgroundColor = '#e67e22';
-    }
-    if (receiptPaymentMethod) receiptPaymentMethod.textContent = 'Cash on Delivery';
-  } else if (method === 'upi') {
-    if (receiptPaymentBadge) {
-      receiptPaymentBadge.textContent = 'PAID (UPI)';
-      receiptPaymentBadge.style.backgroundColor = '#27ae60';
-    }
-    if (receiptPaymentMethod) receiptPaymentMethod.textContent = 'UPI / Instant QR Payment';
-  } else {
-    if (receiptPaymentBadge) {
-      receiptPaymentBadge.textContent = 'PAID';
-      receiptPaymentBadge.style.backgroundColor = '#27ae60';
-    }
-    if (receiptPaymentMethod) receiptPaymentMethod.textContent = 'Credit / Debit Card';
-  }
-
-  // Shipping details
-  const nameEl = document.getElementById('receiptCustomerName');
-  const addrEl = document.getElementById('receiptShippingAddress');
-  const phoneEl = document.getElementById('receiptCustomerPhone');
-  
-  if (nameEl) nameEl.textContent = order.shippingAddress.fullName || 'Valued Customer';
-  if (addrEl) addrEl.textContent = `${order.shippingAddress.address}, ${order.shippingAddress.city} - ${order.shippingAddress.zipCode}`;
-  if (phoneEl) phoneEl.textContent = `Phone: +91 ${order.shippingAddress.phone}`;
-
-  // Items list
-  const receiptItemsEl = document.getElementById('receiptItems');
-  if (receiptItemsEl && order.items) {
-    receiptItemsEl.innerHTML = order.items.map(item => `
-      <div class="receipt-item">
-        <span class="receipt-item-name">${item.title} <span class="receipt-item-qty">x${item.quantity || 1}</span></span>
-        <strong style="color: var(--ink);">₹${(item.price || 0) * (item.quantity || 1)}</strong>
-      </div>
-    `).join('');
-  }
-
-  // Totals breakdown
-  const subtotalEl = document.getElementById('receiptSubtotal');
-  const shippingEl = document.getElementById('receiptShippingFee');
-  const totalEl = document.getElementById('receiptTotal');
-  
-  if (subtotalEl) subtotalEl.textContent = `₹${order.subtotal || order.total || 0}`;
-  if (shippingEl) shippingEl.textContent = (order.shippingFee === 0 || (order.subtotal && order.subtotal >= 1000)) ? 'FREE' : `₹${order.shippingFee || 99}`;
-  if (totalEl) totalEl.textContent = `₹${order.total || 0}`;
-
-  // Animate transition to success panel & scroll to top
-  if (checkoutGrid) {
-    checkoutGrid.style.opacity = '0';
-    checkoutGrid.style.transform = 'translateY(-20px)';
-  }
-  
-  setTimeout(() => {
-    if (checkoutGrid) checkoutGrid.style.display = 'none';
-    if (successContainer) successContainer.style.display = 'flex';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, 400);
 }

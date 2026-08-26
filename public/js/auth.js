@@ -59,6 +59,7 @@ async function updateNavbarAuth() {
                 <p class="user-profile-email">${user.email}</p>
               </div>
               <div class="user-profile-links">
+                <a href="/orders.html">My Orders</a>
                 <a href="/wishlist.html">My Wishlist</a>
                 <a href="/cart.html">My Cart</a>
               </div>

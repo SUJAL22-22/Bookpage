@@ -273,22 +273,17 @@ function adjustDetailsQty(change) {
 
 // Add to Cart helper with custom quantity
 function detailsAddToCart() {
-  const token = localStorage.getItem('lumoraToken');
-  if (!token) {
-    if (typeof showLoginModal === 'function') {
-      showLoginModal();
-    } else {
-      alert('Please sign in to add books to your cart.');
-    }
-    return;
-  }
-
   const qtyInput = document.getElementById('detailsQty');
   if (!qtyInput || !currentBook) return;
 
-  const qty = parseInt(qtyInput.value);
+  const qty = parseInt(qtyInput.value, 10) || 1;
+  if (currentBook.stock !== undefined && qty > currentBook.stock) {
+    alert('Not enough stock available');
+    return;
+  }
+
   const cart = JSON.parse(localStorage.getItem('lumoraCart')) || [];
-  
+
   const existingItem = cart.find(item => item._id === currentBook._id);
   if (existingItem) {
     existingItem.quantity += qty;
@@ -297,11 +292,10 @@ function detailsAddToCart() {
   }
 
   localStorage.setItem('lumoraCart', JSON.stringify(cart));
-  
-  // Sync page badges and drawer
+
   if (typeof renderCart === 'function') renderCart();
   if (typeof updateCartBadge === 'function') updateCartBadge();
-  
+
   if (typeof showToast === 'function') {
     showToast(`Added ${qty} copies to cart!`);
   } else {

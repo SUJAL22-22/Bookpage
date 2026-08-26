@@ -85,7 +85,7 @@ function renderCartPage() {
 
   // Calculate pricing subtotals
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shippingFee = subtotal >= 1000 ? 0 : 99;
+  const shippingFee = subtotal >= 999 ? 0 : 50;
   const total = subtotal + shippingFee;
 
   if (cartPageSubtotal) cartPageSubtotal.textContent = `₹${subtotal}`;

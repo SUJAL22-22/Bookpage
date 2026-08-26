@@ -40,20 +40,25 @@
                 <div class="checkout-steps">
                     <div class="step active" id="step1Indicator">
                         <span class="step-num">1</span>
-                        <span class="step-title">Shipping</span>
+                        <span class="step-title">Address</span>
                     </div>
                     <div class="step-line" id="stepLine1"></div>
                     <div class="step" id="step2Indicator">
                         <span class="step-num">2</span>
                         <span class="step-title">Payment</span>
                     </div>
+                    <div class="step-line" id="stepLine2"></div>
+                    <div class="step" id="step3Indicator">
+                        <span class="step-num">3</span>
+                        <span class="step-title">Shipping</span>
+                    </div>
                 </div>
 
                 <!-- Form sections -->
                 <form id="checkoutForm" novalidate>
-                    <!-- Shipping Section -->
-                    <section class="form-section active" id="shippingSection">
-                        <h2 class="form-section-title">Shipping Details</h2>
+                    <!-- Address Section -->
+                    <section class="form-section active" id="addressSection">
+                        <h2 class="form-section-title">Shipping Address</h2>
                         <div class="form-grid">
                             <div class="form-group full-width">
                                 <label for="fullName">Full Name</label>
@@ -86,8 +91,8 @@
                                 <span class="error-msg" id="zipCodeError"></span>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary btn-next hover-lift" id="goToPaymentBtn">
-                            PROCEED TO PAYMENT
+                        <button type="button" class="btn btn-primary btn-next hover-lift" id="goToPaymentBtn" onclick="handleGoToPayment(event)">
+                            CONTINUE TO PAYMENT
                         </button>
                     </section>
 
@@ -96,15 +101,15 @@
                         <h2 class="form-section-title">Payment Details</h2>
                         
                         <div class="payment-method-selector" style="display: flex; gap: 15px; margin-bottom: 2rem;">
-                            <div class="payment-option active" data-method="card" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
+                            <div class="payment-option active" data-method="card" onclick="selectPaymentMethod('card')" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
                                 <input type="radio" id="payCard" name="paymentMethod" value="card" checked style="margin-right: 8px; accent-color: var(--burgundy);">
                                 <label for="payCard" style="cursor: pointer; font-weight: 500;">Card Payment</label>
                             </div>
-                            <div class="payment-option" data-method="upi" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
+                            <div class="payment-option" data-method="upi" onclick="selectPaymentMethod('upi')" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
                                 <input type="radio" id="payUpi" name="paymentMethod" value="upi" style="margin-right: 8px; accent-color: var(--burgundy);">
                                 <label for="payUpi" style="cursor: pointer; font-weight: 500;">UPI / GPay</label>
                             </div>
-                            <div class="payment-option" data-method="cod" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
+                            <div class="payment-option" data-method="cod" onclick="selectPaymentMethod('cod')" style="flex: 1; border: 1px solid var(--paper-dark); padding: 12px; border-radius: 6px; cursor: pointer; text-align: center; background-color: var(--white);">
                                 <input type="radio" id="payCod" name="paymentMethod" value="cod" style="margin-right: 8px; accent-color: var(--burgundy);">
                                 <label for="payCod" style="cursor: pointer; font-weight: 500;">Cash on Delivery</label>
                             </div>
@@ -125,7 +130,8 @@
                         <!-- COD Details Section -->
                         <div id="codPaymentForm" style="display: none; border: 1px solid var(--paper-dark); padding: 1.5rem; border-radius: 8px; background-color: var(--paper); margin-bottom: 2rem;">
                             <p style="font-weight: 600; color: var(--burgundy); margin-bottom: 5px;">Cash on Delivery Selected</p>
-                            <p style="font-size: 0.95rem; color: var(--ink); line-height: 1.5;">Please pay the order amount to the courier agent in cash. Ensure someone is available at the destination address to receive the delivery.</p>
+                            <p style="font-size: 0.95rem; color: var(--ink); line-height: 1.5;" id="codAmountNote">You will pay the order amount when delivered.</p>
+                            <p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Ensure someone is available at the destination address to receive the delivery.</p>
                         </div>
 
                         <div class="card-details-form" id="cardDetailsForm">
@@ -152,8 +158,66 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary hover-lift" id="backToShippingBtn">
-                                BACK TO SHIPPING
+                            <button type="button" class="btn btn-secondary hover-lift" id="backToAddressBtn" onclick="handleBackToAddress(event)">
+                                BACK TO ADDRESS
+                            </button>
+                            <button type="button" class="btn btn-primary hover-lift" id="goToShippingBtn" onclick="handleGoToShipping(event)">
+                                CONTINUE TO SHIPPING
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Shipping Days Section -->
+                    <section class="form-section" id="shippingSection">
+                        <h2 class="form-section-title">Shipping Information</h2>
+                        <div class="shipping-info">
+                            <div class="shipping-option selected" id="standardOption" onclick="selectShipping('standard')">
+                                <div class="shipping-option-header">
+                                    <div class="shipping-radio">
+                                        <input type="radio" id="standardShipping" name="shippingOption" value="standard" checked>
+                                        <label for="standardShipping">Standard Delivery</label>
+                                    </div>
+                                    <div class="shipping-price">₹50</div>
+                                </div>
+                                <div class="shipping-details">
+                                    <p>Estimated delivery: <strong>5-7 business days</strong></p>
+                                    <p class="shipping-note">Free shipping on orders above ₹999</p>
+                                </div>
+                            </div>
+                            
+                            <div class="shipping-option" id="expressOption" onclick="selectShipping('express')">
+                                <div class="shipping-option-header">
+                                    <div class="shipping-radio">
+                                        <input type="radio" id="expressShipping" name="shippingOption" value="express">
+                                        <label for="expressShipping">Express Delivery</label>
+                                    </div>
+                                    <div class="shipping-price">₹150</div>
+                                </div>
+                                <div class="shipping-details">
+                                    <p>Estimated delivery: <strong>2-3 business days</strong></p>
+                                    <p class="shipping-note">Priority processing and expedited shipping</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-summary-compact">
+                            <div class="compact-summary-row">
+                                <span>Subtotal</span>
+                                <span id="compactSubtotal">₹0</span>
+                            </div>
+                            <div class="compact-summary-row">
+                                <span>Shipping</span>
+                                <span id="compactShipping">₹50</span>
+                            </div>
+                            <div class="compact-summary-row total">
+                                <span>Total</span>
+                                <span id="compactTotal">₹0</span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary hover-lift" id="backToPaymentBtn" onclick="handleBackToPayment(event)">
+                                BACK TO PAYMENT
                             </button>
                             <button type="submit" class="btn btn-primary hover-lift" id="placeOrderBtn">
                                 PLACE ORDER
@@ -198,7 +262,7 @@
                         </div>
                         <div class="summary-row">
                             <span>Shipping</span>
-                            <span id="summaryShipping">₹99</span>
+                            <span id="summaryShipping">₹50</span>
                         </div>
                         <div class="summary-row total-row">
                             <span>Total</span>
@@ -295,17 +359,10 @@
                 </div>
                 
                 <div class="success-actions">
-                    <button type="button" class="btn btn-secondary hover-lift" onclick="window.print()" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                            <rect x="6" y="14" width="12" height="8"></rect>
-                        </svg>
-                        PRINT INVOICE
-                    </button>
-                    <a href="/books.html" class="btn btn-primary hover-lift" style="display: flex; align-items: center; justify-content: center;">
-                        CONTINUE SHOPPING
-                    </a>
+                    <a href="/track-order.html" class="btn btn-primary hover-lift" id="legacyTrackLink">TRACK ORDER</a>
+                    <a href="/orders.html" class="btn btn-secondary hover-lift">VIEW MY ORDERS</a>
+                    <a href="/books.html" class="btn btn-secondary hover-lift">CONTINUE SHOPPING</a>
+                    <button type="button" class="btn btn-secondary hover-lift" onclick="window.print()">PRINT INVOICE</button>
                 </div>
             </div>
         </div>

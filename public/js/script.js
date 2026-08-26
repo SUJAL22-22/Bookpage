@@ -73,24 +73,28 @@ document.addEventListener('DOMContentLoaded', () => {
 // Navigation
 function initNavigation() {
   // Sticky Navbar
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
-  });
+  if (navbar) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  }
 
   // Mobile Menu Toggle
-  menuToggle.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-    document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
-  });
+  if (menuToggle && mobileMenu) {
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    });
+  }
 
   // Close Mobile Menu on Link Click
   document.querySelectorAll('.mobile-menu-link').forEach(link => {
     link.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
+      if (mobileMenu) mobileMenu.classList.remove('active');
       document.body.style.overflow = '';
     });
   });
@@ -98,9 +102,11 @@ function initNavigation() {
   // Smooth Scroll for Navigation Links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
+      const href = this.getAttribute('href');
+      if (!href || href === '#') return;
+      const target = document.querySelector(href);
       if (target) {
+        e.preventDefault();
         target.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
@@ -244,21 +250,20 @@ function initCart() {
 }
 
 function addToCart(bookId) {
-  const token = localStorage.getItem('lumoraToken');
-  if (!token) {
-    if (typeof showLoginModal === 'function') {
-      showLoginModal();
-    } else {
-      alert('Please sign in to add books to your cart.');
-    }
-    return false;
-  }
-
   const book = books.find(b => b._id === bookId);
   if (!book) return false;
 
+  if (book.stock !== undefined && book.stock <= 0) {
+    if (typeof showToast === 'function') showToast('Out of stock');
+    return false;
+  }
+
   const existingItem = cart.find(item => item._id === bookId);
   if (existingItem) {
+    if (book.stock !== undefined && existingItem.quantity >= book.stock) {
+      if (typeof showToast === 'function') showToast('No more stock available');
+      return false;
+    }
     existingItem.quantity++;
   } else {
     cart.push({ ...book, quantity: 1 });
@@ -267,12 +272,13 @@ function addToCart(bookId) {
   saveCart();
   renderCart();
   updateCartBadge();
-  
-  // Show brief animation
-  cartBtn.style.transform = 'scale(1.2)';
-  setTimeout(() => {
-    cartBtn.style.transform = '';
-  }, 200);
+
+  if (cartBtn) {
+    cartBtn.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+      cartBtn.style.transform = '';
+    }, 200);
+  }
   return true;
 }
 
@@ -303,10 +309,12 @@ function saveCart() {
 }
 
 function renderCart() {
+  if (!cartItems) return;
+
   if (cart.length === 0) {
     cartItems.innerHTML = '<p class="cart-empty">Your cart is empty</p>';
-    cartSubtotal.textContent = '₹0';
-    cartTotal.textContent = '₹0';
+    if (cartSubtotal) cartSubtotal.textContent = '₹0';
+    if (cartTotal) cartTotal.textContent = '₹0';
     return;
   }
 
@@ -330,11 +338,12 @@ function renderCart() {
   `).join('');
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  cartSubtotal.textContent = `₹${subtotal}`;
-  cartTotal.textContent = `₹${subtotal}`;
+  if (cartSubtotal) cartSubtotal.textContent = `₹${subtotal}`;
+  if (cartTotal) cartTotal.textContent = `₹${subtotal}`;
 }
 
 function updateCartBadge() {
+  if (!cartBadge) return;
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   cartBadge.textContent = totalItems;
   cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
@@ -602,11 +611,11 @@ function initCategories() {
 
 // Modal
 function initModal() {
-  modalClose.addEventListener('click', closeModal);
-  modalOverlay.addEventListener('click', closeModal);
+  if (modalClose) modalClose.addEventListener('click', closeModal);
+  if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && bookModal.classList.contains('active')) {
+    if (e.key === 'Escape' && bookModal && bookModal.classList.contains('active')) {
       closeModal();
     }
   });
